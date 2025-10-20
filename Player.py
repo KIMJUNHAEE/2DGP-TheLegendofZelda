@@ -1,6 +1,42 @@
 from pico2d import *
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_UP, SDLK_DOWN
 from state_machine import StateMachine
+from PIL import Image as PILImage
+import os
+
+def load_image_with_transparent_color(filename, r, g, b):
+    # PIL로 이미지 열기
+    pil_image = PILImage.open(filename)
+
+    # RGBA 모드로 변환 (투명도 채널 추가)
+    pil_image = pil_image.convert("RGBA")
+
+    # 픽셀 데이터 가져오기
+    data = pil_image.getdata()
+
+    # 새로운 픽셀 데이터 생성 (지정된 색상을 투명하게 변경)
+    new_data = []
+    for item in data:
+        # 지정된 RGB 색상과 일치하면 투명하게 만들기
+        if item[0] == r and item[1] == g and item[2] == b:
+            new_data.append((r, g, b, 0))  # 투명
+        else:
+            new_data.append(item)
+
+    # 새로운 데이터 설정
+    pil_image.putdata(new_data)
+
+    # 임시 파일로 저장
+    temp_filename = filename.replace('.png', '_transparent.png')
+    pil_image.save(temp_filename)
+
+    # pico2d로 로드
+    image = load_image(temp_filename)
+
+    # 임시 파일 삭제
+    os.remove(temp_filename)
+
+    return image
 
 # 이벤트 체크 함수
 def right_down(e):
@@ -110,13 +146,15 @@ class Idle:
         pass
 
     def draw(self):
-        if self.player.face_dir == 1:
-            self.player.DOWNFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x, self.player.y,self.player.size,self.player.size)
-        elif self.player.face_dir == 2:
+        # Idle 상태일 때 face_dir에 따라 마지막으로 바라보던 방향의 이미지를 그림
+        # UPFRAME과 DOWNFRAME의 방향이 반대인 것 같아 수정했습니다.
+        if self.player.face_dir == 1: # 정면 (Up)
             self.player.UPFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x, self.player.y,self.player.size,self.player.size)
-        elif self.player.face_dir == 3:
+        elif self.player.face_dir == 2: # 후면 (Down)
+            self.player.DOWNFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x, self.player.y,self.player.size,self.player.size)
+        elif self.player.face_dir == 3: # 좌측
             self.player.LRFRAME[self.player.frame].clip_composite_draw(0,0,self.player.width,self.player.height,0,'h',self.player.x, self.player.y,self.player.size,self.player.size)
-        elif self.player.face_dir == 4:
+        elif self.player.face_dir == 4: # 우측
             self.player.LRFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x, self.player.y,self.player.size,self.player.size)
 
 
@@ -127,7 +165,7 @@ class player:
         self.width, self.height = 16, 16
         self.UD_dir = 0
         self.RL_dir = 0
-        self.face_dir = 1 # 1: 정면 2: 후면 3: 좌측 4: 우측
+        self.face_dir = 2 # 1: 정면(Up) 2: 후면(Down) 3: 좌측 4: 우측 (초기값 후면으로 변경)
         self.speed = 2
         self.frame = 0
         self.size = 50
@@ -143,10 +181,13 @@ class player:
         down_count = 2
         lr_count = 2
 
-        # 리스트 컴프리헨션으로 이미지 로드 (파일명에 맞게 변경)
-        self.UPFRAME = [load_image(f'{base_path}Link{i + 5}.png') for i in range(up_count)]
-        self.DOWNFRAME = [load_image(f'{base_path}Link{i + 1}.png') for i in range(down_count)]
-        self.LRFRAME = [load_image(f'{base_path}Link{i + 3}.png') for i in range(lr_count)]
+        # 투명하게 만들 회색 값
+        transparent_color = (116, 116, 116)
+
+        # 새로운 함수를 사용하여 이미지 로드
+        self.UPFRAME = [load_image_with_transparent_color(f'{base_path}Link{i + 5}.png', *transparent_color) for i in range(up_count)]
+        self.DOWNFRAME = [load_image_with_transparent_color(f'{base_path}Link{i + 1}.png', *transparent_color) for i in range(down_count)]
+        self.LRFRAME = [load_image_with_transparent_color(f'{base_path}Link{i + 3}.png', *transparent_color) for i in range(lr_count)]
 
         self.IDLE = Idle(self)
         self.UPDOWN = UpDown(self)
@@ -190,5 +231,4 @@ class player:
 
     def draw(self):
         self.state_machine.draw()
-
 

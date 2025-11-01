@@ -2,7 +2,7 @@ from pico2d import *
 import game_world
 import game_framework
 import over_world
-from Player import player as Player
+from Player import player
 from over_world import OverWorld
 
 
@@ -16,7 +16,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            player.handle_event(event)
+            player_obj.handle_event(event)
 
 def init():
     global player_obj

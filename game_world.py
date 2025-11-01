@@ -18,3 +18,9 @@ def remove_object(o):
         if o in layer:
             layer.remove(o)
             return
+
+def clear():
+    global world
+
+    for layer in world:
+        layer.clear()

@@ -2,7 +2,7 @@ from pico2d import *
 import game_world
 import game_framework
 import over_world
-from Player import player
+from Player import player as Player
 from over_world import OverWorld
 
 

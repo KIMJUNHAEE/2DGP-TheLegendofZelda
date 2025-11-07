@@ -1,6 +1,20 @@
 from pico2d import *
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_UP, SDLK_DOWN
+
+import game_framework
 from state_machine import StateMachine
+
+# player의 Run Speed 계산
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# Boy Action Speed
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 2
 
 # 이벤트 체크 함수
 def right_down(e):
@@ -53,7 +67,7 @@ class RightLeft:
             self.player.frame = (self.player.frame + 1) % 2
             self.player.frame_time = current_time  # 시간 업데이트
 
-        self.player.x += self.player.speed * self.player.RL_dir
+        self.player.x += self.player.speed * self.player.RL_dir * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
         # 좌우 이동 시 같은 LRFRAME 사용, 방향에 따라 flip 가능
@@ -88,7 +102,7 @@ class UpDown:
             self.player.frame = (self.player.frame + 1) % 2
             self.player.frame_time = current_time  # 시간 업데이트
 
-        self.player.y += self.player.speed * self.player.UD_dir
+        self.player.y += self.player.speed * self.player.UD_dir * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
         if self.player.UD_dir == 1: # up

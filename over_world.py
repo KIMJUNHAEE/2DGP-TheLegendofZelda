@@ -8,22 +8,31 @@ start_y = 182
 
 # OverWorld Class
 # 맵 번호에 따라서 맵이 전환됨
+# 이미지에서 맵 픽셀 크기 : 256x176
+# 좌우 이동할 때 필요한 픽셀 : 257
+# 상하 이동할 때 필요한 픽셀 : 177
+
+
 class OverWorld:
 
     def __init__(self, player=None):
         base_path = 'resource/Maps/'
         self.image = load_image(f'{base_path}TheLegendofZeldaOverworldOverworldFirstQuest.png')
-        self.num = start_num
+        self.player = player
+
+        # 화면과 맵 크기 (픽셀)
+        self.screen_width = 1280
+        self.screen_height = 880
+        self.map_width = 4113
+        self.map_height = 1598
+
+        # 초기 카메라 위치 (맵 좌표)
         self.x = start_x
         self.y = start_y
-        self.Camera_x = player.x
-        self.Camera_y = player.y
-        self.width = 256
-        self.height = 175
-
 
     def draw(self):
-        self.image.clip_draw(0,0,self.width,self.height, self.Camera_x,self.Camera_y, 1280,880)
+        self.image.clip_draw(self.x, self.y, 256, 176, self.screen_width // 2, self.screen_height // 2, self.screen_width, self.screen_height)
 
     def update(self):
+        # 필요하면 카메라를 플레이어에 따라 이동시키거나 추가 로직을 둠
         pass

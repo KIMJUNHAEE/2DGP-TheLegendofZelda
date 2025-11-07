@@ -139,7 +139,7 @@ class Idle:
 class player:
     def __init__(self):
         # 플레이어 좌표
-        self.x, self.y = 400, 300
+        self.x, self.y = 640, 440
         self.width, self.height = 16, 16
         self.UD_dir = 0
         self.RL_dir = 0

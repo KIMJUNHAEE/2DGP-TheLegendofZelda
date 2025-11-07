@@ -24,7 +24,7 @@ def init():
     player_obj = player()
     game_world.add_object(player_obj, 1)
 
-    over_world = OverWorld()
+    over_world = OverWorld(player_obj)  # player 객체 전달
     game_world.add_object(over_world, 0)
 
 def update():

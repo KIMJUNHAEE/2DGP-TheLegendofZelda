@@ -16,6 +16,10 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 2
 
+#화면 크기
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 880
+
 # 이벤트 체크 함수
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -67,7 +71,11 @@ class RightLeft:
             self.player.frame = (self.player.frame + 1) % 2
             self.player.frame_time = current_time  # 시간 업데이트
 
-        self.player.x += self.player.speed * self.player.RL_dir * RUN_SPEED_PPS * game_framework.frame_time
+        # 새로운 위치 계산
+        new_x = self.player.x + self.player.speed * self.player.RL_dir * RUN_SPEED_PPS * game_framework.frame_time
+        # 경계 검사 후 이동
+        if self.player.size - 20 <= new_x <= SCREEN_WIDTH - self.player.size + 20:
+            self.player.x = new_x
 
     def draw(self):
         # 좌우 이동 시 같은 LRFRAME 사용, 방향에 따라 flip 가능
@@ -102,7 +110,12 @@ class UpDown:
             self.player.frame = (self.player.frame + 1) % 2
             self.player.frame_time = current_time  # 시간 업데이트
 
-        self.player.y += self.player.speed * self.player.UD_dir * RUN_SPEED_PPS * game_framework.frame_time
+        # 새로운 위치 계산
+        new_y = self.player.y + self.player.speed * self.player.UD_dir * RUN_SPEED_PPS * game_framework.frame_time
+
+        # 경계 검사 후 이동
+        if self.player.size - 20 <= new_y <= SCREEN_HEIGHT - self.player.size + 20:
+            self.player.y = new_y
 
     def draw(self):
         if self.player.UD_dir == 1: # up

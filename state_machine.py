@@ -19,7 +19,7 @@ class StateMachine:
                 next_state.enter(state_event)
                # print(
                #     f'{self.cur_state.__class__.__name__} - {event_to_string(state_event)} - > {next_state.__class__.__name__}')
-               # self.cur_state = next_state
+                self.cur_state = next_state
                 return
         #print(f'처리되지 않은 이벤트 {event_to_string(state_event)} 가 있습니다.')
 

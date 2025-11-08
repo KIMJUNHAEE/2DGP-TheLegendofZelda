@@ -220,3 +220,6 @@ class player:
     def draw(self):
         self.state_machine.draw()
 
+    def handle_collision(self):
+        # ex) if group == 'player:enemy':
+        pass

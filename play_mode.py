@@ -29,6 +29,7 @@ def init():
 
 def update():
     game_world.update()
+    game_world.handle_collision()
     pass
 
 def draw():

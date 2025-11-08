@@ -1,5 +1,4 @@
-from pico2d import load_image
-
+from pico2d import load_image, draw_circle, draw_rectangle
 
 # 시작 맵 번호와 좌표
 start_num = 120
@@ -36,3 +35,9 @@ class OverWorld:
     def update(self):
         # 필요하면 카메라를 플레이어에 따라 이동시키거나 추가 로직을 둠
         pass
+
+class Door:
+    def __init__(self, map_num, x, y):
+        self.map_num = map_num
+        self.x = x
+        self.y = y

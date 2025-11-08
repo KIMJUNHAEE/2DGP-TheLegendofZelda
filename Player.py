@@ -73,9 +73,7 @@ class RightLeft:
 
         # 새로운 위치 계산
         new_x = self.player.x + self.player.speed * self.player.RL_dir * RUN_SPEED_PPS * game_framework.frame_time
-        # 경계 검사 후 이동
-        if self.player.size - 20 <= new_x <= SCREEN_WIDTH - self.player.size + 20:
-            self.player.x = new_x
+        self.player.x = new_x
 
     def draw(self):
         # 좌우 이동 시 같은 LRFRAME 사용, 방향에 따라 flip 가능
@@ -112,10 +110,7 @@ class UpDown:
 
         # 새로운 위치 계산
         new_y = self.player.y + self.player.speed * self.player.UD_dir * RUN_SPEED_PPS * game_framework.frame_time
-
-        # 경계 검사 후 이동
-        if self.player.size - 20 <= new_y <= SCREEN_HEIGHT - self.player.size + 20:
-            self.player.y = new_y
+        self.player.y = new_y
 
     def draw(self):
         if self.player.UD_dir == 1: # up
@@ -153,6 +148,7 @@ class player:
     def __init__(self):
         # 플레이어 좌표
         self.x, self.y = 640, 440
+        self.prev_x, self.prev_y = self.x, self.y
         self.width, self.height = 16, 16
         self.UD_dir = 0
         self.RL_dir = 0
@@ -215,11 +211,25 @@ class player:
         self.state_machine.handle_state_event(('INPUT', event))
 
     def update(self):
+        self.prev_x, self.prev_y = self.x, self.y
         self.state_machine.update()
 
     def draw(self):
         self.state_machine.draw()
 
-    def handle_collision(self):
-        # ex) if group == 'player:enemy':
-        pass
+    def get_bb(self):
+        """플레이어의 충돌 박스(Bounding Box) 반환"""
+        half_col_size = 12  # 충돌 박스 크기 조절 (size 50의 절반이 25이므로)
+
+        return (
+            self.x - half_col_size,  # left
+            self.y - half_col_size,  # bottom
+            self.x + half_col_size,  # right
+            self.y + half_col_size  # top
+        )
+
+    def handle_collision(self,group, other):
+        if group == 'player:obstacle':
+            # update에서 저장해둔 '이전 위치'로 되돌아감
+            self.x = self.prev_x
+            self.y = self.prev_y

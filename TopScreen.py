@@ -6,13 +6,18 @@ import game_world
 import play_mode
 from Player import player
 
+# 상단 화면 1280 x 140
 class TopScreen:
 
     def __init__(self, player_obj):
         self.player = player_obj
-        self.image = load_image(f'/resource/TopScreen.png')
-        self.x = 0
-        self.y = 880
+        base_path = 'resource/'
+        self.image = load_image(f'{base_path}TopScreen.png')
+        self.x = 640
+        self.y = 950
 
     def draw(self):
-        self.image.clip_draw(0, 0, 256, 56, self.x, self.y, 1280, 1020)
+        self.image.clip_draw(0, 0, 256, 56, self.x, self.y, 1280, 140)
+
+    def update(self):
+        pass

@@ -1,9 +1,11 @@
 # map_manager.py
 import game_world
+from pico2d import draw_rectangle
 
 # 장애물 객체 클래스
 # game_world의 충돌 시스템은 '객체'를 기반으로 동작하므로,
 # 단순한 사각형 좌표가 아닌 '객체'로 만들어 등록해야 합니다.
+
 class Obstacle:
     def __init__(self, rect):
         # rect는 (x1, y1, x2, y2) 형태
@@ -21,7 +23,7 @@ class Obstacle:
         pass  # 장애물은 업데이트할 내용이 없습니다.
 
     def draw(self):
-        pass  # 장애물은 맵의 일부이므로 따로 그릴 필요가 없습니다.
+        draw_rectangle(*self.get_bb())
         # (디버깅용: from pico2d import draw_rectangle
         #  draw_rectangle(*self.get_bb()))
 
@@ -42,15 +44,16 @@ class MapManager:
         self.map_data[120] = {
             'cam_x': 1800, 'cam_y': 182,  # OverWorld 카메라 좌표
             'transitions': {  # 이웃 맵 번호
-                'left': None, 'right': 121, 'up': 104, 'down': None
+                'left': 119, 'right': 121, 'up': 104, 'down': None
             },
             'obstacles': [  # (x1, y1, x2, y2) - 스크린 좌표 기준
                 # 맵 경계 (길이 있는 곳 제외)
-                (0, 0, 1280, 100),  # 하단 경계
-                (0, 880 - 100, 540, 880),  # 상단 좌측
-                (740, 880 - 100, 1280, 880),  # 상단 우측 (over_world.py 기준 1280-740=540이 아니라 740이 시작점)
-                (0, 100, 100, 880),  # 좌측 경계
-                (1180, 100, 1280, 880),  # 우측 경계 (길 제외)
+                (0, 0, 1280, 170),  # 하단 경계
+                (404, 724, 558, 880),  # 상단문 좌측
+                (720, 482, 1280, 880),  # 상단문 우측
+                (0, 0, 150, 400),  # 좌측 경계
+                (1120, 150, 1280, 410)
+
 
                 # 내부 장애물 (예시: 시작 지점의 바위와 물)
                 # (200, 200, 400, 400), # 예시 돌

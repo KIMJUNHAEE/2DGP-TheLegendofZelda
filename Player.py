@@ -216,10 +216,11 @@ class player:
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         """플레이어의 충돌 박스(Bounding Box) 반환"""
-        half_col_size = 12  # 충돌 박스 크기 조절 (size 50의 절반이 25이므로)
+        half_col_size = 25  # 충돌 박스 크기 조절 (size 50의 절반이 25이므로)
 
         return (
             self.x - half_col_size,  # left

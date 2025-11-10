@@ -11,9 +11,7 @@ start_y = 182
 # 좌우 이동할 때 필요한 픽셀 : 257
 # 상하 이동할 때 필요한 픽셀 : 177
 
-
 class OverWorld:
-
     def __init__(self, player=None):
         base_path = 'resource/Maps/'
         self.image = load_image(f'{base_path}TheLegendofZeldaOverworldOverworldFirstQuest.png')
@@ -36,8 +34,4 @@ class OverWorld:
         # 필요하면 카메라를 플레이어에 따라 이동시키거나 추가 로직을 둠
         pass
 
-class Door:
-    def __init__(self, map_num, x, y):
-        self.map_num = map_num
-        self.x = x
-        self.y = y
+

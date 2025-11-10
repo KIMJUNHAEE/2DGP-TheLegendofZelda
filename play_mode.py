@@ -19,7 +19,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            x, y = event.x, 880 - event.y
+            x, y = event.x, 1020 - event.y
             print(f"마우스 클릭 좌표: X={x}, Y={y}")
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()

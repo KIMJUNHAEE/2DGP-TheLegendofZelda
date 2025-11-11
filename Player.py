@@ -52,6 +52,13 @@ def down_up(e):
 def attack(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
+
+def Create_Attack(x, y, attack_dir):
+    pass
+
+
+
+
 class Attack:
     def __init__(self, player):
         self.player = player
@@ -61,6 +68,7 @@ class Attack:
         if attack(e):
             if self.player.face_dir == 1:
                 self.attack_dir = 1
+                Create_Attack(self.player.x, self.player.y, self.attack_dir)
             elif self.player.face_dir == 2:
                 self.attack_dir = 2
             elif self.player.face_dir == 3:

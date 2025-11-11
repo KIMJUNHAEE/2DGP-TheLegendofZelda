@@ -6,12 +6,14 @@ from Player import player
 from over_world import OverWorld
 from map_manager import MapManager
 from TopScreen import TopScreen
+import config
 
 # 전역 변수 선언
 player_obj = None
 over_world_obj = None
 map_manager_obj = None
 current_map_num = 120 # 시작 맵 번호
+
 
 def handle_events():
     event_list = get_events()
@@ -23,6 +25,13 @@ def handle_events():
             print(f"마우스 클릭 좌표: X={x}, Y={y}")
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_0:
+            if config.Show_BB:
+                config.Show_BB = False
+                print("충돌 박스 표시 OFF")
+            elif not config.Show_BB:
+                config.Show_BB = True
+                print("충돌 박스 표시 ON")
         else:
             player_obj.handle_event(event)
 
@@ -53,8 +62,6 @@ def init():
 
     top_screen = TopScreen(player_obj)
     game_world.add_object(top_screen, 0)
-
-
 
 def check_map_transition():
     """맵 경계를 벗어났는지 확인하고 맵을 전환 (이전 답변과 동일)"""

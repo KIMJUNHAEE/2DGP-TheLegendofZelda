@@ -1,5 +1,7 @@
 # 몬스터 정보 모아두는 곳
-OckorokFrame_count = 2
-Ockorok
-OckorokHp = 1
-OckorokDamage = 1
+
+# Octorok
+OctorokFrame_count = 2
+OctorokAckFrame = 1
+OctorokHp = 1
+OctorokDamage = 1

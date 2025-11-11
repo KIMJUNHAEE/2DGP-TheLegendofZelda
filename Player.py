@@ -228,6 +228,9 @@ class player:
         self.UpAttackFRAME = [load_image(f'{base_path}LinkUpAck{i + 1}.png') for i in range(attack_count)]
         self.DownAttackFRAME = [load_image(f'{base_path}LinkDownAck{i + 1}.png') for i in range(attack_count)]
         self.LRAttackFRAME = [load_image(f'{base_path}LinkLRAck{i + 1}.png') for i in range(attack_count)]
+        self.UpSwordFRAME = [load_image(f'{base_path}UpSword{i + 1}.png') for i in range(attack_count - 1)]
+        self.DownSwordFRAME = [load_image(f'{base_path}DownSword{i + 1}.png') for i in range(attack_count - 1)]
+        self.LRSwordFRAME = [load_image(f'{base_path}LRSword{i + 1}.png') for i in range(attack_count - 1)]
 
         self.IDLE = Idle(self)
         self.UPDOWN = UpDown(self)

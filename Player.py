@@ -4,6 +4,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK
 import game_framework
 from state_machine import StateMachine
 import config
+import game_world
 
 # player의 Run Speed 계산
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -57,15 +58,15 @@ class AttackRange:
     def __init__(self, player_x, player_y, attack_dir):
         if attack_dir == 1:  # Up
             self.x = player_x
-            self.y = player_y + 30
+            self.y = player_y + 40
         elif attack_dir == 2:  # Down
             self.x = player_x
-            self.y = player_y - 30
+            self.y = player_y - 40
         elif attack_dir == 3:  # Left
-            self.x = player_x - 30
+            self.x = player_x - 40
             self.y = player_y
         elif attack_dir == 4:  # Right
-            self.x = player_x + 30
+            self.x = player_x + 40
             self.y = player_y
 
         self.x1 = self.x - 15
@@ -77,6 +78,8 @@ class AttackRange:
         if config.Show_BB:
             draw_rectangle(self.x1, self.y1, self.x2, self.y2)
 
+    def update(self):
+        pass
 
 class Attack:
     def __init__(self, player):
@@ -93,7 +96,9 @@ class Attack:
                 self.attack_dir = 3
             elif self.player.face_dir == 4:
                 self.attack_dir = 4
-        AttackRange(self.player.x, self.player.y, self.attack_dir)
+        global attack_range
+        attack_range = AttackRange(self.player.x, self.player.y, self.attack_dir)
+        game_world.add_object(attack_range, 1)
 
         self.player.frame = 0  # 프레임 초기화
         self.player.frame_time = get_time()  # 진입 시 시간 기록
@@ -110,6 +115,7 @@ class Attack:
             self.player.frame_time = current_time  # 시간 업데이트
             if self.player.frame == 0:  # 한 사이클이 끝났을 때
                 self.player.state_machine.cur_state = self.player.IDLE
+                game_world.remove_object(attack_range)
 
 
     def draw(self):

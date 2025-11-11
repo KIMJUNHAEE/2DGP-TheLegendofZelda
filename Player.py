@@ -22,6 +22,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 880
 
 # 이벤트 체크 함수
+# 상하좌우 이동
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
 
@@ -45,6 +46,53 @@ def down_down(e):
 
 def down_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
+
+
+
+def attack(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+class Attack:
+    def __init__(self, player):
+        self.player = player
+        self.attack_dir = 0
+
+    def enter(self, e):
+        if attack(e):
+            if self.player.face_dir == 1:
+                self.attack_dir = 1
+            elif self.player.face_dir == 2:
+                self.attack_dir = 2
+            elif self.player.face_dir == 3:
+                self.attack_dir = 3
+            elif self.player.face_dir == 4:
+                self.attack_dir = 4
+
+        self.player.frame = 0  # 프레임 초기화
+        self.player.frame_time = get_time()  # 진입 시 시간 기록
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        # 현재 시간 확인
+        current_time = get_time()
+        # 설정된 간격이 지났을 때만 프레임 변경
+        if current_time - self.player.frame_time >= self.player.frame_interval:
+            self.player.frame = (self.player.frame + 1) % 2
+            self.player.frame_time = current_time  # 시간 업데이트
+
+        # 새로운 위치 계산
+        new_x = self.player.x + self.player.speed * self.player.RL_dir * RUN_SPEED_PPS * game_framework.frame_time
+        self.player.x = new_x
+
+    def draw(self):
+        # 좌우 이동 시 같은 LRFRAME 사용, 방향에 따라 flip 가능
+        if self.player.RL_dir == 1:  # right
+            self.player.LRFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
+        else:  # RL_dir == -1: # left
+            self.player.LRFRAME[self.player.frame].clip_composite_draw(0,0,self.player.width,self.player.height,0,'h',self.player.x,self.player.y,self.player.size,self.player.size)
+
 
 class RightLeft:
     def __init__(self, player):
@@ -168,15 +216,17 @@ class player:
         up_count = 2
         down_count = 2
         lr_count = 2
+        attack_count = 4
 
-        # 새로운 함수를 사용하여 이미지 로드
         self.UPFRAME = [load_image(f'{base_path}Link{i + 5}.png') for i in range(up_count)]
         self.DOWNFRAME = [load_image(f'{base_path}Link{i + 1}.png') for i in range(down_count)]
         self.LRFRAME = [load_image(f'{base_path}Link{i + 3}.png') for i in range(lr_count)]
+        self.DownAttackFRAME = [load_image(f'{base_path}LinkDownAck{i + 1}.png') for i in range(attack_count)]
 
         self.IDLE = Idle(self)
         self.UPDOWN = UpDown(self)
         self.RIGHTLEFT = RightLeft(self)
+        self.ATTACK = Attack(self)
 
         self.state_machine = StateMachine(
             self.IDLE,

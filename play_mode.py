@@ -129,7 +129,6 @@ def draw():
 
 def finish():
     game_world.clear()
-    # [수정] collision_pairs도 비워주는 것이 좋습니다.
     game_world.collision_pairs.clear()
 
 

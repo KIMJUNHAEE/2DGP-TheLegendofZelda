@@ -89,12 +89,24 @@ class Attack:
         # 공격 애니메이션 그리기
         if self.attack_dir == 1:  # Up
             self.player.UpAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
+            self.player.swordX = self.player.x
+            self.player.swordY = self.player.y + 40
+            self.player.UpSwordFRAME[self.player.frame - 1].clip_draw(0,0,8,12,self.player.swordX,self.player.swordY,30,30)
         elif self.attack_dir == 2:  # Down
             self.player.DownAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
+            self.player.swordX = self.player.x + 3
+            self.player.swordY = self.player.y - 40
+            self.player.DownSwordFRAME[self.player.frame - 1].clip_draw(0,0,8,11,self.player.swordX,self.player.swordY,30,30)
         elif self.attack_dir == 3:  # Left
             self.player.LRAttackFRAME[self.player.frame].clip_composite_draw(0,0,self.player.width,self.player.height,0,'h',self.player.x,self.player.y,self.player.size,self.player.size)
+            self.player.swordX = self.player.x - 40
+            self.player.swordY = self.player.y - 1
+            self.player.LRSwordFRAME[self.player.frame - 1].clip_composite_draw(0,0,11,16,0,'h',self.player.swordX,self.player.swordY,30,30)
         elif self.attack_dir == 4:  # Right
             self.player.LRAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
+            self.player.swordX = self.player.x + 40
+            self.player.swordY = self.player.y - 1
+            self.player.LRSwordFRAME[self.player.frame - 1].clip_draw(0,0,11,16,self.player.swordX,self.player.swordY,30,30)
 
 
 class RightLeft:
@@ -208,6 +220,8 @@ class player:
         self.speed = 2
         self.frame = 0
         self.size = 50
+        self.swordX = 0
+        self.swordY = 0
 
         # 애니메이션 타이밍 변수 추가
         self.frame_time = 0

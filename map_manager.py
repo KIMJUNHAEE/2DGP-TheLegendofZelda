@@ -1,6 +1,7 @@
 # map_manager.py
 import game_world
 from pico2d import draw_rectangle
+import config
 
 # 장애물 객체 클래스
 # game_world의 충돌 시스템은 '객체'를 기반으로 동작하므로,
@@ -23,7 +24,10 @@ class Obstacle:
         pass  # 장애물은 업데이트할 내용이 없습니다.
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        if config.Show_BB:
+            draw_rectangle(*self.get_bb())
+        elif config.Show_BB == False:
+            pass
         # (디버깅용: from pico2d import draw_rectangle
         #  draw_rectangle(*self.get_bb()))
 
@@ -48,11 +52,17 @@ class MapManager:
             },
             'obstacles': [  # (x1, y1, x2, y2) - 스크린 좌표 기준
                 # 맵 경계 (길이 있는 곳 제외)
-                (0, 0, 1280, 170),  # 하단 경계
-                (404, 724, 558, 880),  # 상단문 좌측
+                (0, 0, 1280, 160),  # 하단 경계
+                (400, 724, 558, 880),  # 상단문 좌측
                 (720, 482, 1280, 880),  # 상단문 우측
                 (0, 0, 150, 400),  # 좌측 경계
-                (1120, 150, 1280, 410)
+                (1120, 150, 1280, 400),
+
+                (0, 486, 122, 880),
+                (122, 578, 219, 880),
+                (219, 663, 315, 880),
+                (219, 800, 400, 880)
+
 
 
                 # 내부 장애물 (예시: 시작 지점의 바위와 물)

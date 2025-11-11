@@ -88,7 +88,7 @@ class Attack:
     def draw(self):
         # 공격 애니메이션 그리기
         if self.attack_dir == 1:  # Up
-            pass
+            self.player.UpAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
         elif self.attack_dir == 2:  # Down
             self.player.DownAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
         elif self.attack_dir == 3:  # Left
@@ -224,6 +224,8 @@ class player:
         self.UPFRAME = [load_image(f'{base_path}Link{i + 5}.png') for i in range(up_count)]
         self.DOWNFRAME = [load_image(f'{base_path}Link{i + 1}.png') for i in range(down_count)]
         self.LRFRAME = [load_image(f'{base_path}Link{i + 3}.png') for i in range(lr_count)]
+
+        self.UpAttackFRAME = [load_image(f'{base_path}LinkUpAck{i + 1}.png') for i in range(attack_count)]
         self.DownAttackFRAME = [load_image(f'{base_path}LinkDownAck{i + 1}.png') for i in range(attack_count)]
 
         self.IDLE = Idle(self)

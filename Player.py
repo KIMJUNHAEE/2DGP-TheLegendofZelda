@@ -3,7 +3,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK
 
 import game_framework
 from state_machine import StateMachine
-from config import Show_BB
+import config
 
 # player의 Run Speed 계산
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -217,7 +217,7 @@ class player:
 
     def draw(self):
         self.state_machine.draw()
-        if Show_BB:
+        if config.Show_BB:
             draw_rectangle(*self.get_bb())
 
     def get_bb(self):

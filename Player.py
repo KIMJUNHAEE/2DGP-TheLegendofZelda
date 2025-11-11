@@ -92,9 +92,9 @@ class Attack:
         elif self.attack_dir == 2:  # Down
             self.player.DownAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
         elif self.attack_dir == 3:  # Left
-            pass
+            self.player.LRAttackFRAME[self.player.frame].clip_composite_draw(0,0,self.player.width,self.player.height,0,'h',self.player.x,self.player.y,self.player.size,self.player.size)
         elif self.attack_dir == 4:  # Right
-            pass
+            self.player.LRAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
 
 
 class RightLeft:
@@ -227,6 +227,7 @@ class player:
 
         self.UpAttackFRAME = [load_image(f'{base_path}LinkUpAck{i + 1}.png') for i in range(attack_count)]
         self.DownAttackFRAME = [load_image(f'{base_path}LinkDownAck{i + 1}.png') for i in range(attack_count)]
+        self.LRAttackFRAME = [load_image(f'{base_path}LinkLRAck{i + 1}.png') for i in range(attack_count)]
 
         self.IDLE = Idle(self)
         self.UPDOWN = UpDown(self)

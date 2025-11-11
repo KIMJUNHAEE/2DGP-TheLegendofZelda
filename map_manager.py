@@ -2,6 +2,7 @@
 import game_world
 from pico2d import draw_rectangle
 import config
+from Monster import Monster
 
 # 장애물 객체 클래스
 # game_world의 충돌 시스템은 '객체'를 기반으로 동작하므로,
@@ -36,7 +37,8 @@ class MapManager:
     def __init__(self):
         self.map_data = {}
         self.current_map_num = 120  # over_world.py의 start_num과 일치
-        self.current_obstacles = []  # 현재 맵의 장애물 객체 리스트
+        self.current_obstacles = [] # 현재 맵의 장애물 객체 리스트
+        self.current_monsters = []
         self.load_map_data()
 
     def load_map_data(self):
@@ -68,7 +70,11 @@ class MapManager:
                 # 내부 장애물 (예시: 시작 지점의 바위와 물)
                 # (200, 200, 400, 400), # 예시 돌
                 # (600, 300, 700, 500)  # 예시 물
+            ],
+            'monsters': [
+                (600, 300, 'Octorok')
             ]
+
         }
 
         # 우측 맵 (121)
@@ -143,3 +149,22 @@ class MapManager:
             data = self.map_data[map_num]
             return data['cam_x'], data['cam_y']
         return None, None  # 데이터가 없으면 None 반환
+
+    def load_monsters(self, map_num):
+        # 이전 맵의 몬스터들을 제거
+        for o in self.current_monsters:
+            game_world.remove_object(o)
+            game_world.remove_collision_object(o)
+        self.current_monsters.clear()
+
+        # 새 맵의 몬스터 정보 로드 및 생성
+        monsters_info = self.get_monsters(map_num)
+        for x, y, name in monsters_info:
+            monster_obj = Monster(x, y, name)
+            game_world.add_object(monster_obj, 1)
+
+    def get_monsters(self, map_num):
+
+        if map_num in self.map_data:
+            return self.map_data[map_num].get('monsters', [])
+        return []

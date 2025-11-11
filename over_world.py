@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_circle, draw_rectangle
+from pico2d import load_image
 
 # 시작 맵 번호와 좌표
 start_num = 120

@@ -53,10 +53,29 @@ def attack(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
 
-def Create_Attack(x, y, attack_dir):
-    pass
+class AttackRange:
+    def __init__(self, player_x, player_y, attack_dir):
+        if attack_dir == 1:  # Up
+            self.x = player_x
+            self.y = player_y + 30
+        elif attack_dir == 2:  # Down
+            self.x = player_x
+            self.y = player_y - 30
+        elif attack_dir == 3:  # Left
+            self.x = player_x - 30
+            self.y = player_y
+        elif attack_dir == 4:  # Right
+            self.x = player_x + 30
+            self.y = player_y
 
+        self.x1 = self.x - 15
+        self.y1 = self.y - 15
+        self.x2 = self.x + 15
+        self.y2 = self.y + 15
 
+    def draw(self):
+        if config.Show_BB:
+            draw_rectangle(self.x1, self.y1, self.x2, self.y2)
 
 
 class Attack:
@@ -68,13 +87,13 @@ class Attack:
         if attack(e):
             if self.player.face_dir == 1:
                 self.attack_dir = 1
-                Create_Attack(self.player.x, self.player.y, self.attack_dir)
             elif self.player.face_dir == 2:
                 self.attack_dir = 2
             elif self.player.face_dir == 3:
                 self.attack_dir = 3
             elif self.player.face_dir == 4:
                 self.attack_dir = 4
+        AttackRange(self.player.x, self.player.y, self.attack_dir)
 
         self.player.frame = 0  # 프레임 초기화
         self.player.frame_time = get_time()  # 진입 시 시간 기록

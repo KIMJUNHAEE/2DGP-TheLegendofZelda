@@ -79,19 +79,22 @@ class Attack:
         current_time = get_time()
         # 설정된 간격이 지났을 때만 프레임 변경
         if current_time - self.player.frame_time >= self.player.frame_interval:
-            self.player.frame = (self.player.frame + 1) % 2
+            self.player.frame = (self.player.frame + 1) % 4
             self.player.frame_time = current_time  # 시간 업데이트
+            if self.player.frame == 0:  # 한 사이클이 끝났을 때
+                self.player.state_machine.cur_state = self.player.IDLE
 
-        # 새로운 위치 계산
-        new_x = self.player.x + self.player.speed * self.player.RL_dir * RUN_SPEED_PPS * game_framework.frame_time
-        self.player.x = new_x
 
     def draw(self):
-        # 좌우 이동 시 같은 LRFRAME 사용, 방향에 따라 flip 가능
-        if self.player.RL_dir == 1:  # right
-            self.player.LRFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
-        else:  # RL_dir == -1: # left
-            self.player.LRFRAME[self.player.frame].clip_composite_draw(0,0,self.player.width,self.player.height,0,'h',self.player.x,self.player.y,self.player.size,self.player.size)
+        # 공격 애니메이션 그리기
+        if self.attack_dir == 1:  # Up
+            pass
+        elif self.attack_dir == 2:  # Down
+            self.player.DownAttackFRAME[self.player.frame].clip_draw(0,0,self.player.width,self.player.height,self.player.x,self.player.y,self.player.size,self.player.size)
+        elif self.attack_dir == 3:  # Left
+            pass
+        elif self.attack_dir == 4:  # Right
+            pass
 
 
 class RightLeft:
@@ -235,7 +238,8 @@ class player:
                     up_down: self.UPDOWN,
                     down_down: self.UPDOWN,
                     right_down: self.RIGHTLEFT,
-                    left_down: self.RIGHTLEFT
+                    left_down: self.RIGHTLEFT,
+                    attack: self.ATTACK
                 },
                 self.UPDOWN: {
                     up_up: self.IDLE,
@@ -244,7 +248,8 @@ class player:
                     left_down: self.RIGHTLEFT,
                     # 같은 상태 내에서 방향 변경을 위해 추가
                     up_down: self.UPDOWN,
-                    down_down: self.UPDOWN
+                    down_down: self.UPDOWN,
+                    attack: self.ATTACK
                 },
                 self.RIGHTLEFT: {
                     right_up: self.IDLE,
@@ -253,7 +258,11 @@ class player:
                     down_down: self.UPDOWN,
                     # 같은 상태 내에서 방향 변경을 위해 추가
                     right_down: self.RIGHTLEFT,
-                    left_down: self.RIGHTLEFT
+                    left_down: self.RIGHTLEFT,
+                    attack: self.ATTACK
+                },
+                self.ATTACK : {
+
                 }
             }
         )

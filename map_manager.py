@@ -38,6 +38,7 @@ class MapManager:
         self.current_map_num = 120  # over_world.py의 start_num과 일치
         self.current_obstacles = [] # 현재 맵의 장애물 객체 리스트
         self.current_monsters = []
+        self.current_doors = []
         self.load_map_data()
 
     def load_map_data(self):
@@ -66,8 +67,8 @@ class MapManager:
             ],
             'monsters': [
                 (600, 300, 'Octorok')
-            ]
-
+            ],
+            'Door': [(326,725,395,800)]
         }
 
         # 우측 맵 (121)
@@ -138,6 +139,22 @@ class MapManager:
             for obstacle in self.current_obstacles:
                 game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
 
+        # 이전 맵 문 삭제
+        for o in self.current_doors:
+            game_world.remove_object(o)
+            game_world.remove_collision_object(o)
+        self.current_doors.clear()
+
+        # 새 맵의 문 정보 로드 및 생성
+        doors_info = self.get_doors(map_num)
+        for x1, y1, x2, y2 in doors_info:
+            door_obj = Obstacle((x1, y1, x2, y2))
+            self.current_doors.append(door_obj)
+            game_world.add_object(door_obj, 0)
+            # 충돌페어 추가
+            game_world.add_collision_pair('player:door', player, door_obj)
+
+
     def get_obstacles(self, map_num):
         """현재 맵의 장애물 사각형 리스트 반환"""
         if map_num in self.map_data:
@@ -160,4 +177,9 @@ class MapManager:
     def get_monsters(self, map_num):
         if map_num in self.map_data:
             return self.map_data[map_num].get('monsters', [])
+        return []
+
+    def get_doors(self, map_num):
+        if map_num in self.map_data:
+            return self.map_data[map_num].get('Door', [])
         return []

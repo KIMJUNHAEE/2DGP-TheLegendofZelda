@@ -69,5 +69,5 @@ class Monster:
             self.x = self.prev_x
             self.y = self.prev_y
 
-        elif group == 'attack:monster':
+        elif group == 'attack_range:monster':
             self.hp -= other.damage

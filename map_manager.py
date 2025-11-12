@@ -3,6 +3,7 @@ import game_world
 from pico2d import draw_rectangle
 import config
 from Monster import Monster
+from NPC import OldManNPC
 
 # 장애물 객체 클래스
 # game_world의 충돌 시스템은 '객체'를 기반으로 동작하므로,
@@ -39,6 +40,7 @@ class MapManager:
         self.current_obstacles = [] # 현재 맵의 장애물 객체 리스트
         self.current_monsters = []
         self.current_doors = []
+        self.current_npcs = []
         self.load_map_data()
 
     def load_map_data(self):
@@ -67,7 +69,9 @@ class MapManager:
             'monsters': [
                 (600, 300, 'Octorok')
             ],
-            'Door': [(326,725,395,800)]
+            'Door': [(326,725,395,800)],
+            'NPCs': []
+
         }
 
         # 우측 맵 (121)
@@ -113,7 +117,8 @@ class MapManager:
                 (1123,156,1280,880)
             ],
             'monsters': [],
-            'Door': [(570,0,700,50)]
+            'Door': [(570,0,700,50)],
+            'NPCs': [(625, 550, 'OldMan')]  # NPC 정보 추가
         }
 
     def load_obstacles(self, map_num, player):
@@ -136,6 +141,12 @@ class MapManager:
             game_world.remove_object(o)
             game_world.remove_collision_object(o)
         self.current_doors.clear()
+
+        # 이전 맵의 NPC들을 제거
+        for o in self.current_npcs:
+            game_world.remove_object(o)
+            game_world.remove_collision_object(o)
+        self.current_npcs.clear()
 
         # 4. 새 맵의 장애물 로드
         obstacle_rects = self.get_obstacles(map_num)
@@ -162,6 +173,15 @@ class MapManager:
             self.current_doors.append(door_obj)
             game_world.add_object(door_obj, 0)
             game_world.add_collision_pair('player:door', player, door_obj)
+
+        # 7. 새 맵의 NPC 로드
+        npcs_info = self.get_npcs(map_num)
+        for x, y, name in npcs_info:
+            if name == 'OldMan':
+                npc_obj = OldManNPC(x, y)
+                self.current_npcs.append(npc_obj)
+                game_world.add_object(npc_obj, 1)
+
 
 
     def get_obstacles(self, map_num):
@@ -191,4 +211,9 @@ class MapManager:
     def get_doors(self, map_num):
         if map_num in self.map_data:
             return self.map_data[map_num].get('Door', [])
+        return []
+
+    def get_npcs(self, map_num):
+        if map_num in self.map_data:
+            return self.map_data[map_num].get('NPCs', [])
         return []

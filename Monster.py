@@ -7,8 +7,8 @@ import config
 class Monster:
     def __init__(self, x, y, name):
         self.name = name
-        self.x = x
-        self.y = y
+        self.x, self.y = x, y
+        self.prev_x, self.prev_y = self.x, self.y
         self.hp = 0
         self.frame_index = 0
         self.frame_time = get_time()  # 초기화 시점 기록
@@ -34,10 +34,11 @@ class Monster:
         return (self.x - half_size, self.y - half_size,
                 self.x + half_size, self.y + half_size)
 
-    def handle_collision(self, group, other):
-        pass
-
     def update(self):
+        if self.hp <= 0:
+            game_world.remove_object(self)
+            game_world.remove_collision_object(self)
+            return
         # 애니메이션 프레임 업데이트
         current_time = get_time()
         if current_time - self.frame_time >= self.frame_interval:
@@ -62,3 +63,11 @@ class Monster:
 
         if config.Show_BB:
             draw_rectangle(*self.get_bb())
+
+    def handle_collision(self, group, other):
+        if group == 'monster:obstacle':
+            self.x = self.prev_x
+            self.y = self.prev_y
+
+        elif group == 'attack:monster':
+            self.hp -= other.damage

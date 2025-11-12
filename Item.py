@@ -4,10 +4,11 @@ import config
 import game_world
 
 class Item:
-    def __init__(self, x, y, item_type):
+    def __init__(self, x, y, item_type, player=None):
         self.item_type = item_type
         self.x = x
         self.y = y
+        self.player = player
         self.should_remove = False  # 제거 플래그 추가
         self.remove_time = 0  # 제거 시간 추가
 
@@ -36,4 +37,7 @@ class Item:
         if group == 'player:item' and not self.should_remove:
             self.remove_time = get_time() + 2.0  # 2초 후 제거
             self.should_remove = True
+            self.x = self.player.x - 20
+            self.y = self.player.y + 40
+
 

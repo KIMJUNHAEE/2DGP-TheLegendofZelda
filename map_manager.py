@@ -201,7 +201,7 @@ class MapManager:
 
         items_info = self.get_items(map_num)
         for x, y, item_type in items_info:
-            item_obj = Item(x, y, item_type)
+            item_obj = Item(x, y, item_type, player)
             self.current_items.append(item_obj)
             game_world.add_object(item_obj, 1)
             game_world.add_collision_pair('player:item', player, item_obj)

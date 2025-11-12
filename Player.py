@@ -358,3 +358,5 @@ class player:
         if group == 'player:obstacle':
             self.x = self.prev_x
             self.y = self.prev_y
+        elif group == 'player:door':
+            self.door_collision = True

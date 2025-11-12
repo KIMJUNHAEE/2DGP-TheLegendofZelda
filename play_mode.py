@@ -117,6 +117,7 @@ def check_map_transition():
 def update():
     game_world.update()  # player.update()가 여기서 호출됨 (이동)
     game_world.handle_collision()  # 충돌 검사 및 처리
+    handle_door_collision()  # 문 충돌 처리 추가
     check_map_transition()  # 맵 전환 검사
 
 
@@ -130,6 +131,31 @@ def finish():
     game_world.clear()
     game_world.collision_pairs.clear()
 
+def handle_door_collision():
+    global current_map_num, player_obj, over_world_obj, map_manager_obj
+
+    if hasattr(player_obj, 'door_collision') and player_obj.door_collision:
+        # 현재 맵이 120이고 문과 충돌했을 때 맵 200으로 전환
+        if current_map_num == 120:
+            print(f"맵 전환: {current_map_num} -> 200 (문 진입)")
+            current_map_num = 200
+            map_manager_obj.current_map_num = 200
+
+            # 새 맵의 카메라 위치로 OverWorld 업데이트
+            cam_x, cam_y = map_manager_obj.get_camera_pos(200)
+            if cam_x is not None:
+                over_world_obj.x = cam_x
+                over_world_obj.y = cam_y
+
+            # 플레이어 위치를 맵 200의 적절한 위치로 설정
+            player_obj.x = 640
+            player_obj.y = 200
+
+            # 새 맵의 장애물들을 로드
+            map_manager_obj.load_obstacles(200, player_obj)
+
+        # 플래그 리셋
+        player_obj.door_collision = False
 
 def pause(): pass
 

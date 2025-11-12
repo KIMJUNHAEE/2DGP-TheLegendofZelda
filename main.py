@@ -4,7 +4,7 @@ import game_framework
 import play_mode as start_mode
 
 # 게임 화면 크기 설정
-# 플레이 화면 1280 x 880
+# 플레이 화면 1280 x 880dh
 # 상단 화면 1280 x 140
 game_weight = 1280
 game_height = 1020

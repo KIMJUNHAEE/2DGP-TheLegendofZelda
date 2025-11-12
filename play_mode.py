@@ -59,6 +59,7 @@ def init():
 
     # [수정] 첫 번째 맵의 장애물들을 로드하고 충돌 시스템에 등록
     map_manager_obj.load_obstacles(current_map_num, player_obj)
+    map_manager_obj.load_monsters(current_map_num, player_obj)
 
     top_screen = TopScreen(player_obj)
     game_world.add_object(top_screen, 0)
@@ -113,6 +114,8 @@ def check_map_transition():
 
         # 6. [수정] 새 맵의 장애물들을 로드 (이전 장애물은 자동 클리어됨)
         map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        map_manager_obj.load_monsters(current_map_num, player_obj)
 
 
 def update():

@@ -150,7 +150,7 @@ class MapManager:
             return data['cam_x'], data['cam_y']
         return None, None  # 데이터가 없으면 None 반환
 
-    def load_monsters(self, map_num):
+    def load_monsters(self, map_num, player):
         # 이전 맵의 몬스터들을 제거
         for o in self.current_monsters:
             game_world.remove_object(o)
@@ -162,6 +162,7 @@ class MapManager:
         for x, y, name in monsters_info:
             monster_obj = Monster(x, y, name)
             game_world.add_object(monster_obj, 1)
+            game_world.add_collision_pair('player:monster', player, monster_obj)
 
     def get_monsters(self, map_num):
 

@@ -105,19 +105,17 @@ class MapManager:
             'transitions': {  # 이웃 맵 번호
                 'left': None, 'right': None, 'up': None, 'down': None
             },
-            'obstacles': [  # (x1, y1, x2, y2) - 스크린 좌표 기준
-                # 맵 경계 (길이 있는 곳 제외)
-                (0, 0, 1280, 160),  # 하단 경계
-                (400, 724, 558, 880),  # 상단문 좌측
-                (720, 482, 1280, 880),  # 상단문 우측
-                (0, 0, 150, 400),  # 좌측 경계
-                (1120, 150, 1280, 400),
-                (0, 486, 122, 880),
-                (122, 578, 219, 880),
-                (219, 663, 315, 880),
-                (219, 800, 400, 880)
-            ],
+            'obstacles': [
+                (0,0,151,880),
+                (0,0,546,150),
+                (0,732,1280,880),
+                (725,0,1280,150),
+                (1123,156,1280,880)
 
+
+            ],
+            'monsters': [],
+            'Door': []
         }
 
     def load_obstacles(self, map_num, player):
@@ -126,51 +124,45 @@ class MapManager:
         # 1. 이전 맵의 장애물들을 game_world와 collision_pairs에서 제거
         for o in self.current_obstacles:
             game_world.remove_object(o)
-            game_world.remove_collision_object(o)  # game_world.py에 정의된 함수
+            game_world.remove_collision_object(o)
         self.current_obstacles.clear()
 
-        # 2. 새 맵의 장애물 목록을 가져옴
-        obstacle_rects = self.get_obstacles(map_num)
-        if not obstacle_rects:
-            return
-
-        # 3. 새 장애물 객체를 생성하여 game_world와 collision_pairs에 추가
-        for rect in obstacle_rects:
-            obstacle_obj = Obstacle(rect)
-            self.current_obstacles.append(obstacle_obj)
-            game_world.add_object(obstacle_obj, 0)  # 0번 레이어(배경)에 추가
-            # 'player:obstacle' 그룹으로 플레이어와 장애물을 충돌 등록
-            game_world.add_collision_pair('player:obstacle', player, obstacle_obj)
-
-        # 이전 맵 몬스터 삭제
+        # 2. 이전 맵의 몬스터들을 제거
         for o in self.current_monsters:
             game_world.remove_object(o)
             game_world.remove_collision_object(o)
         self.current_monsters.clear()
 
-        # 새 맵의 몬스터 정보 로드 및 생성
-        monsters_info = self.get_monsters(map_num)
-        for x, y, name in monsters_info:
-            monster_obj = Monster(x, y, name)
-            game_world.add_object(monster_obj, 1)
-            # 충돌페어 추가
-            game_world.add_collision_pair('player:monster', player, monster_obj)
-            for obstacle in self.current_obstacles:
-                game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
-
-        # 이전 맵 문 삭제
+        # 3. 이전 맵의 문들을 제거
         for o in self.current_doors:
             game_world.remove_object(o)
             game_world.remove_collision_object(o)
         self.current_doors.clear()
 
-        # 새 맵의 문 정보 로드 및 생성
+        # 4. 새 맵의 장애물 로드
+        obstacle_rects = self.get_obstacles(map_num)
+        for rect in obstacle_rects:
+            obstacle_obj = Obstacle(rect)
+            self.current_obstacles.append(obstacle_obj)
+            game_world.add_object(obstacle_obj, 0)
+            game_world.add_collision_pair('player:obstacle', player, obstacle_obj)
+
+        # 5. 새 맵의 몬스터 로드
+        monsters_info = self.get_monsters(map_num)
+        for x, y, name in monsters_info:
+            monster_obj = Monster(x, y, name)
+            self.current_monsters.append(monster_obj)
+            game_world.add_object(monster_obj, 1)
+            game_world.add_collision_pair('player:monster', player, monster_obj)
+            for obstacle in self.current_obstacles:
+                game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
+
+        # 6. 새 맵의 문 로드
         doors_info = self.get_doors(map_num)
         for x1, y1, x2, y2 in doors_info:
             door_obj = Obstacle((x1, y1, x2, y2))
             self.current_doors.append(door_obj)
             game_world.add_object(door_obj, 0)
-            # 충돌페어 추가
             game_world.add_collision_pair('player:door', player, door_obj)
 
 

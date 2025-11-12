@@ -4,6 +4,7 @@ from pico2d import draw_rectangle
 import config
 from Monster import Monster
 from NPC import OldManNPC, FireNPC
+from Item import Item
 
 # 장애물 객체 클래스
 # game_world의 충돌 시스템은 '객체'를 기반으로 동작하므로,
@@ -41,6 +42,7 @@ class MapManager:
         self.current_monsters = []
         self.current_doors = []
         self.current_npcs = []
+        self.current_items = []
         self.load_map_data()
 
     def load_map_data(self):
@@ -70,7 +72,8 @@ class MapManager:
                 (600, 300, 'Octorok')
             ],
             'Door': [(326,725,395,800)],
-            'NPCs': []
+            'NPCs': [],
+            'items': []
 
         }
 
@@ -118,10 +121,11 @@ class MapManager:
             ],
             'monsters': [],
             'Door': [(570,0,700,50)],
-            'NPCs': [(625, 550, 'OldMan'),
+            'NPCs': [(625,550, 'OldMan'),
                      (525,550, 'FireNPC'),
                      (725,550, 'FireNPC')
-                     ]  # NPC 정보 추가
+                     ],  # NPC 정보 추가
+            'items': [(625,450, 'sword')]
         }
 
     def load_obstacles(self, map_num, player):
@@ -150,6 +154,12 @@ class MapManager:
             game_world.remove_object(o)
             game_world.remove_collision_object(o)
         self.current_npcs.clear()
+
+        # 이전 맵의 아이템들을 제거
+        for o in self.current_items:
+            game_world.remove_object(o)
+            game_world.remove_collision_object(o)
+        self.current_items.clear()
 
         # 4. 새 맵의 장애물 로드
         obstacle_rects = self.get_obstacles(map_num)
@@ -189,7 +199,12 @@ class MapManager:
                 self.current_npcs.append(npc_obj)
                 game_world.add_object(npc_obj, 1)
 
-
+        items_info = self.get_items(map_num)
+        for x, y, item_type in items_info:
+            item_obj = Item(x, y, item_type)
+            self.current_items.append(item_obj)
+            game_world.add_object(item_obj, 1)
+            game_world.add_collision_pair('player:item', player, item_obj)
 
     def get_obstacles(self, map_num):
         """현재 맵의 장애물 사각형 리스트 반환"""
@@ -223,4 +238,9 @@ class MapManager:
     def get_npcs(self, map_num):
         if map_num in self.map_data:
             return self.map_data[map_num].get('NPCs', [])
+        return []
+
+    def get_items(self, map_num):
+        if map_num in self.map_data:
+            return self.map_data[map_num].get('items', [])
         return []

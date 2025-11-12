@@ -99,7 +99,9 @@ class Attack:
         global attack_range
         attack_range = AttackRange(self.player.x, self.player.y, self.attack_dir)
         game_world.add_object(attack_range, 1)
-        game_world.add_collision_pair('attack_range:monster', attack_range, None)
+        for obj in game_world.world[1]:  # 몬스터들이 1번 레이어에 있음
+            if hasattr(obj, 'name'):  # 몬스터 객체인지 확인
+                game_world.add_collision_pair('attack_range:monster', attack_range, obj)
 
         self.player.frame = 0  # 프레임 초기화
         self.player.frame_time = get_time()  # 진입 시 시간 기록
@@ -343,9 +345,7 @@ class player:
             draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        """플레이어의 충돌 박스(Bounding Box) 반환"""
         half_col_size = 25  # 충돌 박스 크기 조절 (size 50의 절반이 25이므로)
-
         return (
             self.x - half_col_size,  # left
             self.y - half_col_size,  # bottom
@@ -355,6 +355,5 @@ class player:
 
     def handle_collision(self,group, other):
         if group == 'player:obstacle':
-            # update에서 저장해둔 '이전 위치'로 되돌아감
             self.x = self.prev_x
             self.y = self.prev_y

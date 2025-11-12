@@ -135,7 +135,6 @@ class MapManager:
             game_world.add_object(monster_obj, 1)
             # 충돌페어 추가
             game_world.add_collision_pair('player:monster', player, monster_obj)
-            game_world.add_collision_pair('attack_range:monster', None, monster_obj)
             for obstacle in self.current_obstacles:
                 game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
 

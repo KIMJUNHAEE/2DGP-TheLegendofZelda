@@ -64,7 +64,6 @@ def init():
     game_world.add_object(top_screen, 0)
 
 def check_map_transition():
-    """맵 경계를 벗어났는지 확인하고 맵을 전환 (이전 답변과 동일)"""
     global current_map_num, player_obj, over_world_obj, map_manager_obj
 
     new_map_num = None
@@ -113,7 +112,6 @@ def check_map_transition():
 
         # 6. [수정] 새 맵의 장애물들을 로드 (이전 장애물은 자동 클리어됨)
         map_manager_obj.load_obstacles(current_map_num, player_obj)
-        map_manager_obj.load_monsters(current_map_num, player_obj)
 
 
 def update():

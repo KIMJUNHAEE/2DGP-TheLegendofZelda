@@ -55,7 +55,7 @@ def attack(e):
 
 
 class AttackRange:
-    def __init__(self, player_x, player_y, attack_dir):
+    def __init__(self, player_x, player_y, attack_dir, damage):
         if attack_dir == 1:  # Up
             self.x = player_x
             self.y = player_y + 40
@@ -73,6 +73,7 @@ class AttackRange:
         self.y1 = self.y - 15
         self.x2 = self.x + 15
         self.y2 = self.y + 15
+        self.damage = damage
 
     def draw(self):
         if config.Show_BB:
@@ -80,6 +81,14 @@ class AttackRange:
 
     def update(self):
         pass
+
+    def get_bb(self):
+        return self.x1, self.y1, self.x2, self.y2
+
+    def handle_collision(self,group, other):
+        if group == 'attack_range:monster':
+            game_world.remove_object(attack_range)
+            game_world.remove_collision_object(attack_range)
 
 class Attack:
     def __init__(self, player):
@@ -97,7 +106,7 @@ class Attack:
             elif self.player.face_dir == 4:
                 self.attack_dir = 4
         global attack_range
-        attack_range = AttackRange(self.player.x, self.player.y, self.attack_dir)
+        attack_range = AttackRange(self.player.x, self.player.y, self.attack_dir, self.player.damage)
         game_world.add_object(attack_range, 1)
         for obj in game_world.world[1]:  # 몬스터들이 1번 레이어에 있음
             if hasattr(obj, 'name'):  # 몬스터 객체인지 확인
@@ -120,14 +129,6 @@ class Attack:
                 self.player.state_machine.cur_state = self.player.IDLE
                 game_world.remove_object(attack_range)
                 game_world.remove_collision_object(attack_range)
-
-    def handle_collision(self,group, other):
-        if group == 'attack_range:monster':
-            game_world.remove_object(attack_range)
-            game_world.remove_collision_object(attack_range)
-
-
-
 
     def draw(self):
         # 공격 애니메이션 그리기

@@ -32,7 +32,6 @@ class Obstacle:
         # (디버깅용: from pico2d import draw_rectangle
         #  draw_rectangle(*self.get_bb()))
 
-
 class MapManager:
     def __init__(self):
         self.map_data = {}
@@ -59,17 +58,11 @@ class MapManager:
                 (720, 482, 1280, 880),  # 상단문 우측
                 (0, 0, 150, 400),  # 좌측 경계
                 (1120, 150, 1280, 400),
-
                 (0, 486, 122, 880),
                 (122, 578, 219, 880),
                 (219, 663, 315, 880),
                 (219, 800, 400, 880)
 
-
-
-                # 내부 장애물 (예시: 시작 지점의 바위와 물)
-                # (200, 200, 400, 400), # 예시 돌
-                # (600, 300, 700, 500)  # 예시 물
             ],
             'monsters': [
                 (600, 300, 'Octorok')
@@ -106,8 +99,6 @@ class MapManager:
                 (1180, 100, 1280, 880),  # 우측
             ]
         }
-
-        # TODO: 여기에 다른 맵(105, 119 등)의 데이터도 추가해야 합니다.
 
     def load_obstacles(self, map_num, player):
         """현재 맵의 장애물을 game_world와 충돌 시스템에 등록"""

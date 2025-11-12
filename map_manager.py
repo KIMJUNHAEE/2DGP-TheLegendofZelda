@@ -111,11 +111,9 @@ class MapManager:
                 (0,732,1280,880),
                 (725,0,1280,150),
                 (1123,156,1280,880)
-
-
             ],
             'monsters': [],
-            'Door': []
+            'Door': [(570,0,700,50)]
         }
 
     def load_obstacles(self, map_num, player):

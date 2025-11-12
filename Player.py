@@ -117,6 +117,14 @@ class Attack:
             if self.player.frame == 0:  # 한 사이클이 끝났을 때
                 self.player.state_machine.cur_state = self.player.IDLE
                 game_world.remove_object(attack_range)
+                game_world.remove_collision_object(attack_range)
+
+    def handle_collision(self,group, other):
+        if group == 'attack_range:monster':
+            game_world.remove_object(attack_range)
+            game_world.remove_collision_object(attack_range)
+
+
 
 
     def draw(self):

@@ -3,8 +3,6 @@
 from pico2d import *
 import game_framework
 import game_world
-import play_mode
-from Player import player
 
 # 상단 화면 1280 x 140
 class TopScreen:

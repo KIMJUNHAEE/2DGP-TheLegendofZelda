@@ -131,6 +131,22 @@ class MapManager:
             # 'player:obstacle' 그룹으로 플레이어와 장애물을 충돌 등록
             game_world.add_collision_pair('player:obstacle', player, obstacle_obj)
 
+        # 이전 맵 몬스터 삭제
+        for o in self.current_monsters:
+            game_world.remove_object(o)
+            game_world.remove_collision_object(o)
+        self.current_monsters.clear()
+
+        # 새 맵의 몬스터 정보 로드 및 생성
+        monsters_info = self.get_monsters(map_num)
+        for x, y, name in monsters_info:
+            monster_obj = Monster(x, y, name)
+            game_world.add_object(monster_obj, 1)
+            # 충돌페어 추가
+            game_world.add_collision_pair('player:monster', player, monster_obj)
+            for obstacle in self.current_obstacles:
+                game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
+
     def get_obstacles(self, map_num):
         """현재 맵의 장애물 사각형 리스트 반환"""
         if map_num in self.map_data:
@@ -150,22 +166,7 @@ class MapManager:
             return data['cam_x'], data['cam_y']
         return None, None  # 데이터가 없으면 None 반환
 
-    def load_monsters(self, map_num, player):
-        # 이전 맵의 몬스터들을 제거
-        for o in self.current_monsters:
-            game_world.remove_object(o)
-            game_world.remove_collision_object(o)
-        self.current_monsters.clear()
-
-        # 새 맵의 몬스터 정보 로드 및 생성
-        monsters_info = self.get_monsters(map_num)
-        for x, y, name in monsters_info:
-            monster_obj = Monster(x, y, name)
-            game_world.add_object(monster_obj, 1)
-            game_world.add_collision_pair('player:monster', player, monster_obj)
-
     def get_monsters(self, map_num):
-
         if map_num in self.map_data:
             return self.map_data[map_num].get('monsters', [])
         return []

@@ -3,6 +3,7 @@ import game_world
 import MD
 import config
 
+
 class Monster:
     def __init__(self, x, y, name):
         self.name = name
@@ -15,7 +16,7 @@ class Monster:
         self.width = 0
         self.height = 0
         self.size = 0
-        self.direction = 1 # 1 : up 2 : down 3 : left 4 : right
+        self.direction = 4 # 1 : up 2 : down 3 : left 4 : right
         self.LRframes = []
         self.UDframes = []
 
@@ -44,12 +45,20 @@ class Monster:
                 if self.direction == 1 or self.direction == 2:
                     self.frame_index = (self.frame_index + 1) % len(self.UDframes)
                     self.frame_time = current_time
+                elif self.direction == 3 or self.direction == 4:
+                    self.frame_index = (self.frame_index + 1) % len(self.LRframes)
+                    self.frame_time = current_time
 
     def draw(self):
         if self.name == 'Octorok':
             if self.direction == 1:
+                self.UDframes[self.frame_index].clip_composite_draw(0, 0, self.width, self.height, 0, 'v', self.x, self.y, self.size, self.size)
+            elif self.direction == 2:
                 self.UDframes[self.frame_index].clip_draw(0, 0, self.width, self.height, self.x, self.y, self.size, self.size)
-
+            elif self.direction == 3:
+                self.LRframes[self.frame_index].clip_draw(0, 0, self.width, self.height, self.x, self.y, self.size,self.size)
+            elif self.direction == 4:
+                self.LRframes[self.frame_index].clip_composite_draw(0, 0, self.width, self.height, 0, 'h', self.x, self.y, self.size, self.size)
 
         if config.Show_BB:
             draw_rectangle(*self.get_bb())

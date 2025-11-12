@@ -3,7 +3,7 @@ import game_world
 from pico2d import draw_rectangle
 import config
 from Monster import Monster
-from NPC import OldManNPC
+from NPC import OldManNPC, FireNPC
 
 # 장애물 객체 클래스
 # game_world의 충돌 시스템은 '객체'를 기반으로 동작하므로,
@@ -118,7 +118,10 @@ class MapManager:
             ],
             'monsters': [],
             'Door': [(570,0,700,50)],
-            'NPCs': [(625, 550, 'OldMan')]  # NPC 정보 추가
+            'NPCs': [(625, 550, 'OldMan'),
+                     (525,550, 'FireNPC'),
+                     (725,550, 'FireNPC')
+                     ]  # NPC 정보 추가
         }
 
     def load_obstacles(self, map_num, player):
@@ -179,6 +182,10 @@ class MapManager:
         for x, y, name in npcs_info:
             if name == 'OldMan':
                 npc_obj = OldManNPC(x, y)
+                self.current_npcs.append(npc_obj)
+                game_world.add_object(npc_obj, 1)
+            elif name == 'FireNPC':
+                npc_obj = FireNPC(x, y)
                 self.current_npcs.append(npc_obj)
                 game_world.add_object(npc_obj, 1)
 

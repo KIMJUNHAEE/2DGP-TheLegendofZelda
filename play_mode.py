@@ -154,6 +154,24 @@ def handle_door_collision():
             # 새 맵의 장애물들을 로드
             map_manager_obj.load_obstacles(200, player_obj)
 
+        elif current_map_num == 200:
+            print(f"맵 전환: {current_map_num} -> 120 (동굴 탈출)")
+            current_map_num = 120
+            map_manager_obj.current_map_num = 120
+
+            # 새 맵의 카메라 위치로 OverWorld 업데이트
+            cam_x, cam_y = map_manager_obj.get_camera_pos(120)
+            if cam_x is not None:
+                over_world_obj.x = cam_x
+                over_world_obj.y = cam_y
+
+            # 플레이어 위치를 맵 120의 문 앞으로 설정
+            player_obj.x = 360
+            player_obj.y = 680
+
+            # 새 맵의 장애물들을 로드
+            map_manager_obj.load_obstacles(120, player_obj)
+
         # 플래그 리셋
         player_obj.door_collision = False
 

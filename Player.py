@@ -99,6 +99,7 @@ class Attack:
         global attack_range
         attack_range = AttackRange(self.player.x, self.player.y, self.attack_dir)
         game_world.add_object(attack_range, 1)
+        game_world.add_collision_pair('attack_range:monster', attack_range, None)
 
         self.player.frame = 0  # 프레임 초기화
         self.player.frame_time = get_time()  # 진입 시 시간 기록
@@ -249,12 +250,13 @@ class player:
         self.width, self.height = 16, 16
         self.UD_dir = 0
         self.RL_dir = 0
-        self.face_dir = 2 # 1: 정면(Up) 2: 후면(Down) 3: 좌측 4: 우측 (초기값 후면으로 변경)
+        self.face_dir = 2 # / 1: Up / 2: Down / 3: Left / 4: Right
         self.speed = 2
         self.frame = 0
         self.size = 50
         self.swordX = 0
         self.swordY = 0
+        self.damage = 1
 
         # 애니메이션 타이밍 변수 추가
         self.frame_time = 0

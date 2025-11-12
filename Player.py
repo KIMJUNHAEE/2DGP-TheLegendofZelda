@@ -48,11 +48,50 @@ def down_down(e):
 def down_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
-
-
 def attack(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE and config.get_sword
 
+def get_item_event(e):
+    return e[0] == 'GET_ITEM'
+
+class GetItem:
+    def __init__(self, player):
+        self.player = player
+        self.frame = 0
+        self.start_time = 0
+        self.duration = 2.0
+        self.animation_complete = False  # 애니메이션 완료 플래그 추가
+
+    def enter(self, e):
+        self.frame = 0
+        self.start_time = get_time()
+        self.player.frame_time = get_time()
+        self.animation_complete = False
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        current_time = get_time()
+
+        # 애니메이션이 완료되지 않았을 때만 프레임 업데이트
+        if not self.animation_complete and current_time - self.player.frame_time >= self.player.frame_interval:
+            self.frame += 1
+            self.player.frame_time = current_time
+
+            # 프레임이 2에 도달하면 애니메이션 완료
+            if self.frame >= 2:
+                self.frame = 1  # 마지막 프레임 고정
+                self.animation_complete = True
+
+        # 2초가 지났는지 확인
+        if current_time - self.start_time >= self.duration:
+            self.player.state_machine.cur_state = self.player.IDLE
+
+    def draw(self):
+        self.player.GetItemFRAME[self.frame].clip_draw(0,0,16,16,self.player.x,self.player.y,self.player.size,self.player.size)
+        if config.Show_BB:
+            draw_rectangle(*self.player.get_bb())
 
 class AttackRange:
     def __init__(self, player_x, player_y, attack_dir, damage):
@@ -275,11 +314,13 @@ class player:
 
         # 이미지 파일 경로 수정
         base_path = 'resource/LinkFrame/'
+        base_path2 = 'resource/Items/'
         # 각 방향 프레임 개수 (필요에 맞게 수정)
         up_count = 2
         down_count = 2
         lr_count = 2
         attack_count = 4
+        get_Item_count = 2
 
         self.UPFRAME = [load_image(f'{base_path}Link{i + 5}.png') for i in range(up_count)]
         self.DOWNFRAME = [load_image(f'{base_path}Link{i + 1}.png') for i in range(down_count)]
@@ -291,11 +332,13 @@ class player:
         self.UpSwordFRAME = [load_image(f'{base_path}UpSword{i + 1}.png') for i in range(attack_count - 1)]
         self.DownSwordFRAME = [load_image(f'{base_path}DownSword{i + 1}.png') for i in range(attack_count - 1)]
         self.LRSwordFRAME = [load_image(f'{base_path}LRSword{i + 1}.png') for i in range(attack_count - 1)]
+        self.GetItemFRAME = [load_image(f'{base_path2}GetItem{i + 1}.png') for i in range(get_Item_count)]
 
         self.IDLE = Idle(self)
         self.UPDOWN = UpDown(self)
         self.RIGHTLEFT = RightLeft(self)
         self.ATTACK = Attack(self)
+        self.GetItem = GetItem(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -305,7 +348,8 @@ class player:
                     down_down: self.UPDOWN,
                     right_down: self.RIGHTLEFT,
                     left_down: self.RIGHTLEFT,
-                    attack: self.ATTACK
+                    attack: self.ATTACK,
+                    get_item_event: self.GetItem
                 },
                 self.UPDOWN: {
                     up_up: self.IDLE,
@@ -315,7 +359,8 @@ class player:
                     # 같은 상태 내에서 방향 변경을 위해 추가
                     up_down: self.UPDOWN,
                     down_down: self.UPDOWN,
-                    attack: self.ATTACK
+                    attack: self.ATTACK,
+                    get_item_event: self.GetItem
                 },
                 self.RIGHTLEFT: {
                     right_up: self.IDLE,
@@ -325,10 +370,13 @@ class player:
                     # 같은 상태 내에서 방향 변경을 위해 추가
                     right_down: self.RIGHTLEFT,
                     left_down: self.RIGHTLEFT,
-                    attack: self.ATTACK
+                    attack: self.ATTACK,
+                    get_item_event: self.GetItem
                 },
                 self.ATTACK : {
-
+                    get_item_event: self.GetItem
+                },
+                self.GetItem : {
                 }
             }
         )
@@ -361,9 +409,10 @@ class player:
         elif group == 'player:door':
             self.door_collision = True
         elif group == 'player:item':
-            if other.item_type == 'sword':
-                config.get_sword = True
-            else:
-                print(f"아이템 획득: {other.item_type}")
-            game_world.remove_object(other)
-            game_world.remove_collision_object(other)
+            if not other.should_remove:
+                if other.item_type == 'sword':
+                    config.get_sword = True
+                else:
+                    print(f"아이템 획득: {other.item_type}")
+                get_item_event = ('GET_ITEM', None)
+                self.state_machine.handle_state_event(get_item_event)

@@ -51,7 +51,7 @@ def down_up(e):
 
 
 def attack(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE and config.get_sword
 
 
 class AttackRange:
@@ -360,3 +360,10 @@ class player:
             self.y = self.prev_y
         elif group == 'player:door':
             self.door_collision = True
+        elif group == 'player:item':
+            if other.item_type == 'sword':
+                config.get_sword = True
+            else:
+                print(f"아이템 획득: {other.item_type}")
+            game_world.remove_object(other)
+            game_world.remove_collision_object(other)

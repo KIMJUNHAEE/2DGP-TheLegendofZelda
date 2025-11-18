@@ -50,6 +50,183 @@ class MapManager:
         # 맵 1칸당 월드 좌표계 오프셋: (dx=257, dy=177)
         # 맵 스크린 좌표계 크기: (0, 0) ~ (1280, 880)
 
+        self.map_data[103] = {
+            'cam_x': 1800 - 257, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 102, 'right': 104, 'up': None, 'down': 119
+            },
+            'obstacles': [
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        # 상단 맵 (104)
+        self.map_data[104] = {
+            'cam_x': 1800, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 103, 'right': 105, 'up': None, 'down': 120
+            },
+            'obstacles': [
+                (0, 0, 563, 158),
+                (720, 0, 874, 245),
+                (874, 0, 1280, 156),
+                (1121, 156, 1201, 242),
+                (1201, 242, 1280, 321),
+                (0, 158, 80, 318),
+                (80, 158, 158, 237),
+
+                (240, 243, 318, 320),
+                (399, 242, 479, 319),
+                (399, 404, 479, 476),
+                (238, 404, 319, 478),
+                (239, 566, 318, 640),
+                (397, 562, 482, 639),
+                (960, 242, 1037, 308),
+                (957, 400, 1040, 475),
+                (962, 565, 1039, 638),
+
+                (0, 567, 76, 879),
+                (76, 654, 156, 878),
+                (160, 722, 1280, 880),
+                (719, 649, 880, 721),
+                (1121, 643, 1199, 722),
+                (1199, 565, 1280, 720)
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[105] = {
+            'cam_x': 1800 + 257, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 104, 'right': 106, 'up': 89, 'down': 121
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[106] = {
+            'cam_x': 2314, 'cam_y': 359,
+            'transitions': {
+                'left': 105, 'right': 107, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[107] = {
+            'cam_x': 2571, 'cam_y': 359,
+            'transitions': {
+                'left': 106, 'right': 108, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[108] = {
+            'cam_x': 2828, 'cam_y': 359,
+            'transitions': {
+                'left': 107, 'right': 109, 'up': None, 'down': 124
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[109] = {
+            'cam_x': 3085, 'cam_y': 359,
+            'transitions': {
+                'left': 108, 'right': 110, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[110] = {
+            'cam_x': 3342, 'cam_y': 359,
+            'transitions': {
+                'left': 109, 'right': 111, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[111] = {
+            'cam_x': 3599, 'cam_y': 359,
+            'transitions': {
+                'left': 110, 'right': 112, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[112] = {
+            'cam_x': 3856, 'cam_y': 359,
+            'transitions': {
+                'left': 111, 'right': None, 'up': None, 'down': 128
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[119] = {
+            'cam_x': 1800 - 257, 'cam_y': 182,
+            'transitions': {
+                'left': 118, 'right': 120, 'up': 103, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
         # 시작 맵 (120) - 젤다 시작 동굴 화면
         self.map_data[120] = {
             'cam_x': 1800, 'cam_y': 182,  # OverWorld 카메라 좌표
@@ -71,7 +248,7 @@ class MapManager:
             'monsters': [
                 (600, 300, 'Octorok')
             ],
-            'Door': [(326,725,395,800)],
+            'Door': [(326, 725, 395, 800)],
             'NPCs': [],
             'items': []
         }
@@ -80,7 +257,7 @@ class MapManager:
         self.map_data[121] = {
             'cam_x': 1800 + 257, 'cam_y': 182,
             'transitions': {
-                'left': 120, 'right': None, 'up': None, 'down': None
+                'left': 120, 'right': None, 'up': 105, 'down': None
             },
             'obstacles': [
                 (0,482,100,880),
@@ -113,44 +290,6 @@ class MapManager:
                 (1043, 241, 1116, 312),  # 27-28번째 좌표
                 (1049, 400, 1120, 475),  # 29-30번째 좌표
                 (1040, 557, 1117, 633),  # 31-32번째 좌표
-            ],
-            'monsters': [],
-            'Door': [],
-            'NPCs': [],
-            'items': []
-        }
-
-        # 상단 맵 (104)
-        self.map_data[104] = {
-            'cam_x': 1800, 'cam_y': 182 + 177,
-            'transitions': {
-                'left': 103, 'right': 105, 'up': None, 'down': 120
-            },
-            'obstacles': [
-                (0,0,563,158),
-                (720,0,874,245),
-                (874,0,1280,156),
-                (1121,156,1201,242),
-                (1201,242,1280,321),
-                (0,158,80,318),
-                (80,158,158,237),
-
-                (240,243,318,320),
-                (399,242,479,319),
-                (399,404,479,476),
-                (238,404,319,478),
-                (239,566,318,640),
-                (397,562,482,639),
-                (960,242,1037,308),
-                (957,400,1040,475),
-                (962,565,1039,638),
-
-                (0,567,76,879),
-                (76,654,156,878),
-                (160,722,1280,880),
-                (719,649,880,721),
-                (1121,643,1199,722),
-                (1199,565,1280,720)
             ],
             'monsters': [],
             'Door': [],

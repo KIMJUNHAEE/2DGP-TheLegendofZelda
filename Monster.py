@@ -3,7 +3,6 @@ import game_world
 import MD
 import config
 
-
 class Monster:
     def __init__(self, x, y, name):
         self.name = name

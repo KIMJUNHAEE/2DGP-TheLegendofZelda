@@ -2,7 +2,7 @@
 import game_world
 from pico2d import draw_rectangle
 import config
-from Monster import Monster
+from Monster import Monster, Arrow
 from NPC import OldManNPC, FireNPC
 from Item import Item
 
@@ -364,6 +364,12 @@ class MapManager:
             game_world.remove_object(o)
             game_world.remove_collision_object(o)
         self.current_items.clear()
+
+        # 화살 제거 추가
+        for obj in game_world.world[1][:]:  # 슬라이싱으로 복사본 생성
+            if isinstance(obj, Arrow):
+                game_world.remove_object(obj)
+                game_world.remove_collision_object(obj)
 
         # 4. 새 맵의 장애물 로드
         obstacle_rects = self.get_obstacles(map_num)

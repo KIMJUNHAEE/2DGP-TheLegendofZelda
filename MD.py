@@ -8,4 +8,4 @@ OctorokDamage = 1
 OctorokWidth = 16
 OctorokHeight = 16
 OctorokSize = 50
-OctorokSpeed = 60  # 픽셀/초
+OctorokSpeed = 90  # 픽셀/초

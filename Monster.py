@@ -7,9 +7,11 @@ import game_framework
 
 
 class Monster:
-    def __init__(self, x, y, name):
+    def __init__(self, x, y, name, map_num=None, monster_index=None):
         self.name = name
         self.x, self.y = x, y
+        self.map_num = map_num  # 몬스터가 속한 맵 번호
+        self.monster_index = monster_index  # 몬스터의 인덱스
         self.prev_x, self.prev_y = self.x, self.y
         self.hp = 0
         self.frame_index = 0
@@ -44,6 +46,12 @@ class Monster:
 
     def update(self):
         if self.hp <= 0:
+            # 처치될 때 MapManager에 기록
+            if hasattr(self, 'map_num') and hasattr(self, 'monster_index'):
+                import play_mode
+                if hasattr(play_mode, 'map_manager_obj'):
+                    play_mode.map_manager_obj.add_defeated_monster(self.map_num, self.monster_index)
+
             game_world.remove_object(self)
             game_world.remove_collision_object(self)
             return

@@ -43,6 +43,7 @@ class MapManager:
         self.current_doors = []
         self.current_npcs = []
         self.current_items = []
+        self.defeated_monsters = set()  # 처치된 몬스터를 기록하는 집합 추가
         self.load_map_data()
 
     def load_map_data(self):
@@ -323,6 +324,14 @@ class MapManager:
             'items': [(625,450, 'sword')]
         }
 
+    def add_defeated_monster(self, map_num, monster_index):
+        """처치된 몬스터를 기록"""
+        self.defeated_monsters.add((map_num, monster_index))
+
+    def is_monster_defeated(self, map_num, monster_index):
+        """몬스터가 처치되었는지 확인"""
+        return (map_num, monster_index) in self.defeated_monsters
+
     def load_obstacles(self, map_num, player):
         """현재 맵의 장애물을 game_world와 충돌 시스템에 등록"""
 
@@ -366,13 +375,14 @@ class MapManager:
 
         # 5. 새 맵의 몬스터 로드
         monsters_info = self.get_monsters(map_num)
-        for x, y, name in monsters_info:
-            monster_obj = Monster(x, y, name)
-            self.current_monsters.append(monster_obj)
-            game_world.add_object(monster_obj, 1)
-            game_world.add_collision_pair('player:monster', player, monster_obj)
-            for obstacle in self.current_obstacles:
-                game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
+        for index, (x, y, name) in enumerate(monsters_info):
+            if not self.is_monster_defeated(map_num, index):  # 처치되지 않은 몬스터만 생성
+                monster_obj = Monster(x, y, name, map_num, index)  # map_num과 index 전달
+                self.current_monsters.append(monster_obj)
+                game_world.add_object(monster_obj, 1)
+                game_world.add_collision_pair('player:monster', player, monster_obj)
+                for obstacle in self.current_obstacles:
+                    game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
 
         # 6. 새 맵의 문 로드
         doors_info = self.get_doors(map_num)

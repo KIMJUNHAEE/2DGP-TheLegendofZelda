@@ -296,6 +296,7 @@ class player:
     def __init__(self):
         # 플레이어 좌표
         self.x, self.y = 640, 440
+        self.hp = 6
         self.prev_x, self.prev_y = self.x, self.y
         self.width, self.height = 16, 16
         self.UD_dir = 0
@@ -416,3 +417,9 @@ class player:
                     print(f"아이템 획득: {other.item_type}")
                 get_item_event = ('GET_ITEM', None)
                 self.state_machine.handle_state_event(get_item_event)
+        elif group == 'player:monster':
+            self.hp -= other.damage
+            print(f"플레이어가 몬스터에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
+        elif group == 'player:arrow':
+            self.hp -= other.damage
+            print(f"플레이어가 화살에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")

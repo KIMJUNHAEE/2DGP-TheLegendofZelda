@@ -6,14 +6,15 @@ import random
 import game_framework
 
 class Arrow:
-    def __init__(self, x, y, name, direction):
+    def __init__(self, x, y, Monster):
         self.x, self.y = x, y
-        self.name = name
+        self.name = Monster.name
         self.size = 0
-        self.direction = direction  # 1: up, 2: down, 3: left, 4: right
+        self.direction = Monster.direction  # 1: up, 2: down, 3: left, 4: right
         self.frame_index = 0
         self.speed = 0
         self.range = 0
+        self.damage = Monster.damage
 
         base_path = 'resource/Enemies/'
         if self.name == 'Octorok':
@@ -68,14 +69,11 @@ class Arrow:
             game_world.remove_collision_object(self)
 
 
-
-
-
-
 class Monster:
     def __init__(self, x, y, name, map_num=None, monster_index=None):
         self.name = name
         self.x, self.y = x, y
+        self.damage = 0
         self.map_num = map_num  # 몬스터가 속한 맵 번호
         self.monster_index = monster_index  # 몬스터의 인덱스
         self.prev_x, self.prev_y = self.x, self.y
@@ -106,6 +104,7 @@ class Monster:
             self.size = MD.OctorokSize
             self.speed = MD.OctorokSpeed
             self.attack_interval = MD.OctorokAckInterval
+            self.damage = MD.OctorokDamage
             self.LRframes = [load_image(f'{base_path}OctorokLR{i + 1}.png') for i in range(MD.OctorokFrame_count)]
             self.UDframes = [load_image(f'{base_path}OctorokUD{i + 1}.png') for i in range(MD.OctorokFrame_count)]
 
@@ -203,7 +202,7 @@ class Monster:
 
     def shoot_arrow(self):
         # 현재 방향으로 화살 생성
-        arrow = Arrow(self.x, self.y, self.name, self.direction)
+        arrow = Arrow(self.x, self.y, self)
         game_world.add_object(arrow, 1)
         game_world.add_collision_pair('player:arrow', None, arrow)
         game_world.add_collision_pair('arrow:obstacle', arrow, None)

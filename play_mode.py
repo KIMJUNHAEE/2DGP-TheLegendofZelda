@@ -120,7 +120,13 @@ def update():
     game_world.handle_collision()  # 충돌 검사 및 처리
     handle_door_collision()  # 문 충돌 처리 추가
     check_map_transition()  # 맵 전환 검사
+    check_player_death()
 
+def check_player_death():
+    global player_obj
+    if player_obj.hp <= 0:
+        print("플레이어가 사망했습니다. 게임을 종료합니다.")
+        game_framework.quit()
 
 def draw():
     clear_canvas()

@@ -45,6 +45,7 @@ def init():
     current_map_num = map_manager_obj.current_map_num  # 120
     player_obj = player()
     game_world.add_object(player_obj, 1)
+    game_world.add_collision_pair('player:arrow', player_obj, None)
 
     over_world_obj = OverWorld(player_obj)  # player 객체 전달
     game_world.add_object(over_world_obj,0)

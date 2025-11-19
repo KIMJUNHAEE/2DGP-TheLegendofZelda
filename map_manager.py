@@ -372,6 +372,8 @@ class MapManager:
             self.current_obstacles.append(obstacle_obj)
             game_world.add_object(obstacle_obj, 0)
             game_world.add_collision_pair('player:obstacle', player, obstacle_obj)
+            game_world.add_collision_pair('arrow:obstacle', None, obstacle_obj)  # 화살과 장애물 충돌 페어 추가
+
 
         # 5. 새 맵의 몬스터 로드
         monsters_info = self.get_monsters(map_num)

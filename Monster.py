@@ -52,7 +52,7 @@ class Arrow:
                 self.x + half_size, self.y + half_size)
 
     def handle_collision(self, group, other):
-        if group == 'arrow:obstacle':
+        if group in ['arrow:obstacle', 'player:arrow']:
             game_world.remove_object(self)
             game_world.remove_collision_object(self)
 
@@ -194,4 +194,6 @@ class Monster:
         # 현재 방향으로 화살 생성
         arrow = Arrow(self.x, self.y, self.name, self.direction)
         game_world.add_object(arrow, 1)
+        game_world.add_collision_pair('player:arrow', None, arrow)
+        game_world.add_collision_pair('arrow:obstacle', arrow, None)
         game_world.add_collision_pair('player:arrow', None, arrow)

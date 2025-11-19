@@ -9,3 +9,7 @@ OctorokWidth = 16
 OctorokHeight = 16
 OctorokSize = 50
 OctorokSpeed = 90  # 픽셀/초
+OctorokAckRange = 500  # 공격 범위
+OctorokAckSpeed = 700  # 화살 속도 (픽셀/초)
+OctorokAckInterval = 1.5  # 공격 간격 (초)
+OctorokAckSize = 25

@@ -25,6 +25,21 @@ class Arrow:
     def update(self):
         if self.name == 'Octorok':
             distance = self.speed * game_framework.frame_time
+
+            # 화면 경계 체크 및 제거
+            half_size = self.size // 2
+            if (self.x - half_size < 0 or self.x + half_size > 1280 or
+                    self.y - half_size < 0 or self.y + half_size > 880):
+                game_world.remove_object(self)
+                game_world.remove_collision_object(self)
+                return
+
+            self.range -= distance
+            if self.range <= 0:
+                game_world.remove_object(self)
+                game_world.remove_collision_object(self)
+                return
+
             if self.direction == 1:  # up
                 self.y += distance
             elif self.direction == 2:  # down
@@ -34,10 +49,6 @@ class Arrow:
             elif self.direction == 4:  # right
                 self.x += distance
 
-            self.range -= distance
-            if self.range <= 0:
-                game_world.remove_object(self)
-                game_world.remove_collision_object(self)
 
     def draw(self):
         if self.name == 'Octorok':

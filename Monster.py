@@ -47,6 +47,8 @@ class Monster:
             game_world.remove_object(self)
             game_world.remove_collision_object(self)
             return
+
+        self.prev_x, self.prev_y = self.x, self.y
         # 애니메이션 프레임 업데이트
         current_time = get_time()
 
@@ -110,6 +112,8 @@ class Monster:
         if group == 'monster:obstacle':
             self.x = self.prev_x
             self.y = self.prev_y
+            self.direction = random.randint(1, 4)
+            self.move_time = get_time()  # 방향 변경 시간 리셋
 
         elif group == 'attack_range:monster':
             self.hp -= other.damage

@@ -234,46 +234,53 @@ class Monster:
                     elif self.direction == 3 or self.direction == 4:
                         self.frame_index = (self.frame_index + 1) % len(self.LRframes)
                         self.frame_time = current_time
+
         elif self.name == 'Tektite':
-            # 점프 관련 변수 초기화 (생성자에서 추가 필요)
+            # 점프 관련 변수 초기화
             if not hasattr(self, 'jump_start_time'):
                 self.jump_start_time = current_time
-                self.jump_duration = 1.0  # 점프 지속 시간
-                self.base_y = self.y  # 기본 Y 좌표
-                self.jump_height = 50  # 점프 높이
+                self.jump_duration = 1.5  # 점프 지속 시간
                 self.jump_direction = random.choice([1, 2, 3, 4])  # 점프 방향
 
             # 점프 진행률 계산 (0~1)
             jump_progress = (current_time - self.jump_start_time) / self.jump_duration
 
             if jump_progress >= 1.0:  # 점프 완료
-                self.y = self.base_y
                 # 새로운 점프 시작
                 self.jump_start_time = current_time
-                self.base_y = self.y
                 self.jump_direction = random.choice([1, 2, 3, 4])
                 jump_progress = 0
 
-            # 사인파를 이용한 수직 이동 (포물선 궤적)
-            self.y = self.base_y + self.jump_height * math.sin(jump_progress * math.pi)
-
-            # 수평 이동
+            # 기본 이동 (Octorok처럼)
             distance = self.speed * game_framework.frame_time
             if self.jump_direction == 1:  # up
-                self.base_y += distance
+                self.y += distance
             elif self.jump_direction == 2:  # down
-                self.base_y -= distance
+                self.y -= distance
             elif self.jump_direction == 3:  # left
                 self.x -= distance
             elif self.jump_direction == 4:  # right
                 self.x += distance
 
+            # 점프 효과 (Y좌표에 사인파 추가)
+            jump_offset = self.jump_height * math.sin(jump_progress * math.pi)
+            self.y += jump_offset
+
             # 화면 경계 처리
             half_size = self.size // 2
-            if self.x - half_size < 0 or self.x + half_size > 1280:
-                self.jump_direction = random.choice([1, 2])
-            if self.base_y - half_size < 0 or self.base_y + half_size > 880:
-                self.jump_direction = random.choice([3, 4])
+            if self.x - half_size < 0:
+                self.x = half_size
+                self.jump_direction = 4
+            elif self.x + half_size > 1280:
+                self.x = 1280 - half_size
+                self.jump_direction = 3
+
+            if self.y - half_size < 0:
+                self.y = half_size
+                self.jump_direction = 1
+            elif self.y + half_size > 880:
+                self.y = 880 - half_size
+                self.jump_direction = 2
 
             # 프레임 애니메이션
             if current_time - self.frame_time >= self.frame_interval:

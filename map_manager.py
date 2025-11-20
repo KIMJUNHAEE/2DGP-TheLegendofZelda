@@ -6,33 +6,26 @@ from Monster import Monster, Arrow
 from NPC import OldManNPC, FireNPC
 from Item import Item
 
-# 장애물 객체 클래스
-# game_world의 충돌 시스템은 '객체'를 기반으로 동작하므로,
-# 단순한 사각형 좌표가 아닌 '객체'로 만들어 등록해야 합니다.
-
+# 장애물 클래스
 class Obstacle:
     def __init__(self, rect):
-        # rect는 (x1, y1, x2, y2) 형태
+        # (x1, y1, x2, y2) 형태
         self.rect = rect
 
     def get_bb(self):
-        # (left, bottom, right, top) 반환
         return self.rect[0], self.rect[1], self.rect[2], self.rect[3]
 
     def handle_collision(self, group, other):
-        # 장애물은 충돌 시 아무것도 할 필요가 없습니다.
         pass
 
     def update(self):
-        pass  # 장애물은 업데이트할 내용이 없습니다.
+        pass
 
     def draw(self):
         if config.Show_BB:
             draw_rectangle(*self.get_bb())
         elif config.Show_BB == False:
             pass
-        # (디버깅용: from pico2d import draw_rectangle
-        #  draw_rectangle(*self.get_bb()))
 
 class MapManager:
     def __init__(self):
@@ -247,7 +240,7 @@ class MapManager:
                 (219, 800, 400, 880)
             ],
             'monsters': [
-                (600, 300, 'Tektite')
+                (600, 300, 'Octorok'),
             ],
             'Door': [(326, 725, 395, 800)],
             'NPCs': [],
@@ -320,7 +313,7 @@ class MapManager:
             'NPCs': [(625,550, 'OldMan'),
                      (525,550, 'FireNPC'),
                      (725,550, 'FireNPC')
-                     ],  # NPC 정보 추가
+                     ],
             'items': [(625,450, 'sword')]
         }
 

@@ -296,7 +296,7 @@ class player:
     def __init__(self):
         # 플레이어 좌표
         self.x, self.y = 640, 440
-        self.hp = 6
+        self.hp = 60000
         self.prev_x, self.prev_y = self.x, self.y
         self.width, self.height = 16, 16
         self.UD_dir = 0

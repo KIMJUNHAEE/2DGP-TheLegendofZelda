@@ -5,6 +5,42 @@ import config
 import random
 import game_framework
 
+class MonsterDead:
+    def __init__(self, x, y, Monster):
+        self.x, self.y = x, y
+        self.name = Monster.name
+        self.frame_index = 0
+        self.frame_time = get_time()
+        self.frame_interval = 0.2  # 각 프레임 간격 (초)
+
+        base_path = 'resource/Enemies/'
+        if self.name == 'Octorok':
+            self.width = MD.OctorokWidth
+            self.height = MD.OctorokHeight
+            self.size = MD.OctorokSize
+            self.frames = [load_image(f'{base_path}MDead{i + 1}.png') for i in range(4)]
+
+    def update(self):
+        current_time = get_time()
+        if current_time - self.frame_time >= self.frame_interval:
+            self.frame_index += 1
+            self.frame_time = current_time
+
+        if self.frame_index >= len(self.frames):
+            game_world.remove_object(self)
+            return
+
+    def get_bb(self):
+        half_size = self.size // 2
+        return (self.x - half_size, self.y - half_size,
+                self.x + half_size, self.y + half_size)
+
+    def draw(self):
+        if self.frame_index < len(self.frames):
+            self.frames[self.frame_index].clip_draw(0, 0, 16, 16, self.x, self.y, self.size, self.size)
+
+
+
 class Arrow:
     def __init__(self, x, y, Monster):
         self.x, self.y = x, y
@@ -87,6 +123,7 @@ class Monster:
         self.direction = 4 # 1 : up 2 : down 3 : left 4 : right
         self.LRframes = []
         self.UDframes = []
+        self.is_dead = False  # 죽음 상태 플래그 추가
 
         self.last_attack_time = 0  # 마지막 화살 발사 시간
         self.attack_interval = 0  # 화살 발사 간격 (몬스터별로 다름)
@@ -198,7 +235,12 @@ class Monster:
             self.move_time = get_time()  # 방향 변경 시간 리셋
 
         elif group == 'attack_range:monster':
-            self.hp -= other.damage
+            if not self.is_dead:  # 아직 죽지 않았을 때만 데미지 처리
+                self.hp -= other.damage
+                if self.hp <= 0:
+                    self.is_dead = True  # 죽음 상태로 변경
+                    monsterdead = MonsterDead(self.x, self.y, self)
+                    game_world.add_object(monsterdead, 1)
 
     def shoot_arrow(self):
         # 현재 방향으로 화살 생성

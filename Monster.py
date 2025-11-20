@@ -4,6 +4,7 @@ import MD
 import config
 import random
 import game_framework
+import math
 
 class MonsterDead:
     def __init__(self, x, y, Monster):
@@ -18,6 +19,11 @@ class MonsterDead:
             self.width = MD.OctorokWidth
             self.height = MD.OctorokHeight
             self.size = MD.OctorokSize
+            self.frames = [load_image(f'{base_path}MDead{i + 1}.png') for i in range(4)]
+        elif self.name == 'Tektite':
+            self.width = MD.TektiteWidth
+            self.height = MD.TektiteHeight
+            self.size = MD.TektiteSize
             self.frames = [load_image(f'{base_path}MDead{i + 1}.png') for i in range(4)]
 
     def update(self):
@@ -145,6 +151,23 @@ class Monster:
             self.LRframes = [load_image(f'{base_path}OctorokLR{i + 1}.png') for i in range(MD.OctorokFrame_count)]
             self.UDframes = [load_image(f'{base_path}OctorokUD{i + 1}.png') for i in range(MD.OctorokFrame_count)]
 
+        elif self.name == 'Tektite':
+            self.hp = MD.TektiteHp
+            self.width = MD.TektiteWidth
+            self.height = MD.TektiteHeight
+            self.size = MD.TektiteSize
+            self.speed = MD.TektiteSpeed
+            self.damage = MD.TektiteDamage
+            self.LRframes = [load_image(f'{base_path}Tektite{i + 1}.png') for i in range(MD.TektiteFrame_count)]
+            # 점프 관련 변수 추가
+            self.jump_start_time = get_time()
+            self.jump_duration = 1.0
+            self.base_y = self.y
+            self.jump_height = 50
+            self.jump_direction = random.choice([1, 2, 3, 4])
+
+
+
     def get_bb(self):
         half_size = self.size // 2
         return (self.x - half_size, self.y - half_size,
@@ -171,46 +194,91 @@ class Monster:
             self.shoot_arrow()
             self.last_attack_time = current_time
 
-        # 방향 변경 로직
-        if current_time - self.move_time >= self.direction_change_interval:
-            self.direction = random.randint(1, 4)  # 1~4 랜덤 방향
-            self.move_time = current_time
+        if self.name == 'Octorok':
+            # 방향 변경 로직
+            if current_time - self.move_time >= self.direction_change_interval:
+                self.direction = random.randint(1, 4)  # 1~4 랜덤 방향
+                self.move_time = current_time
 
-        # 이동 로직
-        if self.direction == 1:  # up
-            self.y += self.speed * game_framework.frame_time
-        elif self.direction == 2:  # down
-            self.y -= self.speed * game_framework.frame_time
-        elif self.direction == 3:  # left
-            self.x -= self.speed * game_framework.frame_time
-        elif self.direction == 4:  # right
-            self.x += self.speed * game_framework.frame_time
+            # 이동 로직
+            if self.direction == 1:  # up
+                self.y += self.speed * game_framework.frame_time
+            elif self.direction == 2:  # down
+                self.y -= self.speed * game_framework.frame_time
+            elif self.direction == 3:  # left
+                self.x -= self.speed * game_framework.frame_time
+            elif self.direction == 4:  # right
+                self.x += self.speed * game_framework.frame_time
 
-        # 화면 경계 제한 (1280x880 범위)
-        half_size = self.size // 2
-        if self.x - half_size < 0:
-            self.x = half_size
-            self.direction = 4  # 오른쪽으로 방향 변경
-        elif self.x + half_size > 1280:
-            self.x = 1280 - half_size
-            self.direction = 3  # 왼쪽으로 방향 변경
+            # 화면 경계 제한 (1280x880 범위)
+            half_size = self.size // 2
+            if self.x - half_size < 0:
+                self.x = half_size
+                self.direction = 4  # 오른쪽으로 방향 변경
+            elif self.x + half_size > 1280:
+                self.x = 1280 - half_size
+                self.direction = 3  # 왼쪽으로 방향 변경
 
-        if self.y - half_size < 0:
-            self.y = half_size
-            self.direction = 1  # 위쪽으로 방향 변경
-        elif self.y + half_size > 880:
-            self.y = 880 - half_size
-            self.direction = 2  # 아래쪽으로 방향 변경
+            if self.y - half_size < 0:
+                self.y = half_size
+                self.direction = 1  # 위쪽으로 방향 변경
+            elif self.y + half_size > 880:
+                self.y = 880 - half_size
+                self.direction = 2  # 아래쪽으로 방향 변경
 
+            if current_time - self.frame_time >= self.frame_interval:
+                if self.name == 'Octorok':
+                    if self.direction == 1 or self.direction == 2:
+                        self.frame_index = (self.frame_index + 1) % len(self.UDframes)
+                        self.frame_time = current_time
+                    elif self.direction == 3 or self.direction == 4:
+                        self.frame_index = (self.frame_index + 1) % len(self.LRframes)
+                        self.frame_time = current_time
+        elif self.name == 'Tektite':
+            # 점프 관련 변수 초기화 (생성자에서 추가 필요)
+            if not hasattr(self, 'jump_start_time'):
+                self.jump_start_time = current_time
+                self.jump_duration = 1.0  # 점프 지속 시간
+                self.base_y = self.y  # 기본 Y 좌표
+                self.jump_height = 50  # 점프 높이
+                self.jump_direction = random.choice([1, 2, 3, 4])  # 점프 방향
 
-        if current_time - self.frame_time >= self.frame_interval:
-            if self.name == 'Octorok':
-                if self.direction == 1 or self.direction == 2:
-                    self.frame_index = (self.frame_index + 1) % len(self.UDframes)
-                    self.frame_time = current_time
-                elif self.direction == 3 or self.direction == 4:
-                    self.frame_index = (self.frame_index + 1) % len(self.LRframes)
-                    self.frame_time = current_time
+            # 점프 진행률 계산 (0~1)
+            jump_progress = (current_time - self.jump_start_time) / self.jump_duration
+
+            if jump_progress >= 1.0:  # 점프 완료
+                self.y = self.base_y
+                # 새로운 점프 시작
+                self.jump_start_time = current_time
+                self.base_y = self.y
+                self.jump_direction = random.choice([1, 2, 3, 4])
+                jump_progress = 0
+
+            # 사인파를 이용한 수직 이동 (포물선 궤적)
+            self.y = self.base_y + self.jump_height * math.sin(jump_progress * math.pi)
+
+            # 수평 이동
+            distance = self.speed * game_framework.frame_time
+            if self.jump_direction == 1:  # up
+                self.base_y += distance
+            elif self.jump_direction == 2:  # down
+                self.base_y -= distance
+            elif self.jump_direction == 3:  # left
+                self.x -= distance
+            elif self.jump_direction == 4:  # right
+                self.x += distance
+
+            # 화면 경계 처리
+            half_size = self.size // 2
+            if self.x - half_size < 0 or self.x + half_size > 1280:
+                self.jump_direction = random.choice([1, 2])
+            if self.base_y - half_size < 0 or self.base_y + half_size > 880:
+                self.jump_direction = random.choice([3, 4])
+
+            # 프레임 애니메이션
+            if current_time - self.frame_time >= self.frame_interval:
+                self.frame_index = (self.frame_index + 1) % len(self.LRframes)
+                self.frame_time = current_time
 
 
     def draw(self):
@@ -223,6 +291,9 @@ class Monster:
                 self.LRframes[self.frame_index].clip_draw(0, 0, self.width, self.height, self.x, self.y, self.size,self.size)
             elif self.direction == 4:
                 self.LRframes[self.frame_index].clip_composite_draw(0, 0, self.width, self.height, 0, 'h', self.x, self.y, self.size, self.size)
+
+        elif self.name == 'Tektite':
+            self.LRframes[self.frame_index].clip_draw(0, 0, self.width, self.height, self.x, self.y, self.size, self.size)
 
         if config.Show_BB:
             draw_rectangle(*self.get_bb())

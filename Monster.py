@@ -45,6 +45,10 @@ class MonsterDead:
         if self.frame_index < len(self.frames):
             self.frames[self.frame_index].clip_draw(0, 0, 16, 16, self.x, self.y, self.size, self.size)
 
+    def handle_collision(self, group, other):
+        # 죽은 몬스터는 충돌 처리를 하지 않음
+        pass
+
 
 
 class Arrow:

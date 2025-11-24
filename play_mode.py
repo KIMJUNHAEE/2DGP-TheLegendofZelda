@@ -23,6 +23,10 @@ def handle_events():
         elif event.type == SDL_MOUSEBUTTONDOWN:
             x, y = event.x, 1020 - event.y
             print(f"마우스 클릭 좌표: X={x}, Y={y}")
+            if config.teleport_mode:
+                player_obj.x = x
+                player_obj.y = y
+                print(f"텔레포트: 플레이어 위치 변경 to X={x}, Y={y}")
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_0:
@@ -32,6 +36,13 @@ def handle_events():
             elif not config.Show_BB:
                 config.Show_BB = True
                 print("충돌 박스 표시 ON")
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_t:
+            if config.teleport_mode:
+                config.teleport_mode = False
+                print("텔레포트 모드 OFF")
+            elif not config.teleport_mode:
+                config.teleport_mode = True
+                print("텔레포트 모드 ON")
         else:
             player_obj.handle_event(event)
 

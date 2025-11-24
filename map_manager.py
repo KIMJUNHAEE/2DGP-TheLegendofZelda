@@ -917,7 +917,7 @@ class MapManager:
             obstacle_obj = Obstacle(rect)
             self.current_obstacles.append(obstacle_obj)
             game_world.add_object(obstacle_obj, 0)
-            game_world.add_collision_pair('player:obstacle', player, obstacle_obj)
+            game_world.add_collision_pair('player:obstacle', None, obstacle_obj)
             game_world.add_collision_pair('arrow:obstacle', None, obstacle_obj)  # 화살과 장애물 충돌 페어 추가
 
 

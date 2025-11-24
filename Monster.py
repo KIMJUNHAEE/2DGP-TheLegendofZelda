@@ -116,6 +116,10 @@ class Arrow:
 
 
 class Monster:
+    LRframes = None
+    UDframes = None
+    TektiteFrames = None
+
     def __init__(self, x, y, name, map_num=None, monster_index=None):
         self.name = name
         self.x, self.y = x, y
@@ -131,8 +135,6 @@ class Monster:
         self.height = 0
         self.size = 0
         self.direction = 4 # 1 : up 2 : down 3 : left 4 : right
-        self.LRframes = []
-        self.UDframes = []
         self.is_dead = False  # 죽음 상태 플래그 추가
 
         self.last_attack_time = 0  # 마지막 화살 발사 시간
@@ -144,6 +146,11 @@ class Monster:
         self.direction_change_interval = 1.0  # 2초마다 방향 변경
 
         base_path = 'resource/Enemies/'
+        # 몬스터 등장 이펙트
+        self.AppearCount = 3
+        self.Appear = True
+        self.AppearFrame = [load_image(f'{base_path}MonsterAppear{i + 1}.png') for i in range(self.AppearCount)]
+
         if self.name == 'Octorok':
             self.hp = MD.OctorokHp
             self.width = MD.OctorokWidth
@@ -152,8 +159,11 @@ class Monster:
             self.speed = MD.OctorokSpeed
             self.attack_interval = MD.OctorokAckInterval
             self.damage = MD.OctorokDamage
-            self.LRframes = [load_image(f'{base_path}OctorokLR{i + 1}.png') for i in range(MD.OctorokFrame_count)]
-            self.UDframes = [load_image(f'{base_path}OctorokUD{i + 1}.png') for i in range(MD.OctorokFrame_count)]
+            if Monster.LRframes is None:
+                Monster.LRframes = [load_image(f'{base_path}OctorokLR{i + 1}.png') for i in range(MD.OctorokFrame_count)]
+            if Monster.UDframes is None:
+                Monster.UDframes = [load_image(f'{base_path}OctorokUD{i + 1}.png') for i in range(MD.OctorokFrame_count)]
+
 
         elif self.name == 'Tektite':
             self.hp = MD.TektiteHp
@@ -162,25 +172,8 @@ class Monster:
             self.size = MD.TektiteSize
             self.speed = MD.TektiteSpeed
             self.damage = MD.TektiteDamage
-            self.LRframes = [load_image(f'{base_path}Tektite{i + 1}.png') for i in range(MD.TektiteFrame_count)]
-
-            # 점프 관련 변수들 초기화
-            self.jump_start_time = get_time()
-            self.jump_duration = 1.0  # 점프 지속 시간
-            self.rest_duration = 1.5  # 휴식 시간
-            self.is_jumping = True  # 점프 중인지 휴식 중인지 구분
-            self.start_pos = (self.x, self.y)
-
-            # 첫 번째 목표 위치 설정
-            target_x = self.x + random.randint(-150, 150)
-            target_y = self.y + random.randint(-150, 150)
-
-            # 화면 경계 제한
-            half_size = self.size // 2
-            target_x = max(half_size, min(1280 - half_size, target_x))
-            target_y = max(half_size, min(880 - half_size, target_y))
-
-            self.target_pos = (target_x, target_y)
+            if Monster.TektiteFrames is None:
+                Monster.TektiteFrames = [load_image(f'{base_path}Tektite{i + 1}.png') for i in range(MD.TektiteFrame_count)]
 
 
 
@@ -200,6 +193,36 @@ class Monster:
             game_world.remove_object(self)
             game_world.remove_collision_object(self)
             return
+
+        if self.Appear:
+            current_time = get_time()
+            if current_time - self.frame_time >= 0.2:
+                self.frame_index += 1
+                self.frame_time = current_time
+
+            if self.frame_index >= self.AppearCount:
+                self.Appear = False
+                self.frame_index = 0  # 애니메이션 프레임 초기화
+
+                if self.name == 'Tektite':
+                    # 점프 관련 변수들 초기화
+                    self.jump_start_time = get_time()
+                    self.jump_duration = 1.0  # 점프 지속 시간
+                    self.rest_duration = 1.5  # 휴식 시간
+                    self.is_jumping = True  # 점프 중인지 휴식 중인지 구분
+                    self.start_pos = (self.x, self.y)
+
+                    # 첫 번째 목표 위치 설정
+                    target_x = self.x + random.randint(-150, 150)
+                    target_y = self.y + random.randint(-150, 150)
+
+                    # 화면 경계 제한
+                    half_size = self.size // 2
+                    target_x = max(half_size, min(1280 - half_size, target_x))
+                    target_y = max(half_size, min(880 - half_size, target_y))
+
+                    self.target_pos = (target_x, target_y)
+            return  # 등장 애니메이션이 끝날 때까지 업데이트 중지
 
         self.prev_x, self.prev_y = self.x, self.y
         # 애니메이션 프레임 업데이트
@@ -243,13 +266,13 @@ class Monster:
                 self.direction = 2  # 아래쪽으로 방향 변경
 
             if current_time - self.frame_time >= self.frame_interval:
-                if self.name == 'Octorok':
-                    if self.direction == 1 or self.direction == 2:
-                        self.frame_index = (self.frame_index + 1) % len(self.UDframes)
-                        self.frame_time = current_time
-                    elif self.direction == 3 or self.direction == 4:
-                        self.frame_index = (self.frame_index + 1) % len(self.LRframes)
-                        self.frame_time = current_time
+                if self.direction == 1 or self.direction == 2:
+                    self.frame_index = (self.frame_index + 1) % len(self.UDframes)
+                    self.frame_time = current_time
+                elif self.direction == 3 or self.direction == 4:
+                    self.frame_index = (self.frame_index + 1) % len(self.LRframes)
+                    self.frame_time = current_time
+
 
         elif self.name == 'Tektite':
             if self.is_jumping:  # 점프 중
@@ -300,14 +323,19 @@ class Monster:
 
             # 프레임 애니메이션 (점프 중일 때만)
             if self.is_jumping and current_time - self.frame_time >= 0.2:
-                self.frame_index = (self.frame_index + 1) % len(self.LRframes)
+                self.frame_index = (self.frame_index + 1) % len(self.TektiteFrames)
                 self.frame_time = current_time
             elif not self.is_jumping and current_time - self.frame_time >= 0.8:  # 휴식 중에는 느리게
-                self.frame_index = (self.frame_index + 1) % len(self.LRframes)
+                self.frame_index = (self.frame_index + 1) % len(self.TektiteFrames)
                 self.frame_time = current_time
 
 
     def draw(self):
+
+        if self.Appear:
+            self.AppearFrame[self.frame_index].clip_draw(0, 0, 16, 16, self.x, self.y, self.size, self.size)
+            return
+
         if self.name == 'Octorok':
             if self.direction == 1:
                 self.UDframes[self.frame_index].clip_composite_draw(0, 0, self.width, self.height, 0, 'v', self.x, self.y, self.size, self.size)
@@ -319,7 +347,7 @@ class Monster:
                 self.LRframes[self.frame_index].clip_composite_draw(0, 0, self.width, self.height, 0, 'h', self.x, self.y, self.size, self.size)
 
         elif self.name == 'Tektite':
-            self.LRframes[self.frame_index].clip_draw(0, 0, self.width, self.height, self.x, self.y, self.size, self.size)
+            self.TektiteFrames[self.frame_index].clip_draw(0, 0, self.width, self.height, self.x, self.y, self.size, self.size)
 
         if config.Show_BB:
             draw_rectangle(*self.get_bb())

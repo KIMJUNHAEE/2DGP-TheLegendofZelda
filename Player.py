@@ -126,8 +126,8 @@ class AttackRange:
 
     def handle_collision(self,group, other):
         if group == 'attack_range:monster':
-            game_world.remove_object(attack_range)
-            game_world.remove_collision_object(attack_range)
+            game_world.remove_object(self)
+            game_world.remove_collision_object(self)
 
 class Attack:
     def __init__(self, player):

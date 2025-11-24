@@ -930,7 +930,8 @@ class MapManager:
                 game_world.add_object(monster_obj, 1)
                 game_world.add_collision_pair('player:monster', player, monster_obj)
                 for obstacle in self.current_obstacles:
-                    game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
+                    if not monster_obj.name == 'Tektite':
+                        game_world.add_collision_pair('monster:obstacle', monster_obj, obstacle)
 
         # 6. 새 맵의 문 로드
         doors_info = self.get_doors(map_num)

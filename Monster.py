@@ -354,7 +354,7 @@ class Monster:
 
     def handle_collision(self, group, other):
         if group == 'monster:obstacle':
-            if not self.name == 'Tektite':
+            #if not self.name == 'Tektite':
                 self.x = self.prev_x
                 self.y = self.prev_y
                 self.direction = random.randint(1, 4)

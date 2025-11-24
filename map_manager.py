@@ -487,7 +487,7 @@ class MapManager:
                 (219, 800, 400, 880)
             ],
             'monsters': [
-                (600, 300, 'Octorok'),
+                (600, 300, 'Tektite'),
             ],
             'Door': [(326, 725, 395, 800)],
             'NPCs': [],

@@ -159,12 +159,24 @@ class Monster:
             self.speed = MD.TektiteSpeed
             self.damage = MD.TektiteDamage
             self.LRframes = [load_image(f'{base_path}Tektite{i + 1}.png') for i in range(MD.TektiteFrame_count)]
-            # 점프 관련 변수 추가
+
+            # 점프 관련 변수들 초기화
             self.jump_start_time = get_time()
-            self.jump_duration = 1.0
-            self.base_y = self.y
-            self.jump_height = 50
-            self.jump_direction = random.choice([1, 2, 3, 4])
+            self.jump_duration = 1.0  # 점프 지속 시간
+            self.rest_duration = 1.5  # 휴식 시간
+            self.is_jumping = True  # 점프 중인지 휴식 중인지 구분
+            self.start_pos = (self.x, self.y)
+
+            # 첫 번째 목표 위치 설정
+            target_x = self.x + random.randint(-150, 150)
+            target_y = self.y + random.randint(-150, 150)
+
+            # 화면 경계 제한
+            half_size = self.size // 2
+            target_x = max(half_size, min(1280 - half_size, target_x))
+            target_y = max(half_size, min(880 - half_size, target_y))
+
+            self.target_pos = (target_x, target_y)
 
 
 
@@ -236,54 +248,53 @@ class Monster:
                         self.frame_time = current_time
 
         elif self.name == 'Tektite':
-            # 점프 관련 변수 초기화
-            if not hasattr(self, 'jump_start_time'):
-                self.jump_start_time = current_time
-                self.jump_duration = 1.5  # 점프 지속 시간
-                self.jump_direction = random.choice([1, 2, 3, 4])  # 점프 방향
+            if self.is_jumping:  # 점프 중
+                jump_progress = (current_time - self.jump_start_time) / self.jump_duration
 
-            # 점프 진행률 계산 (0~1)
-            jump_progress = (current_time - self.jump_start_time) / self.jump_duration
+                if jump_progress >= 1.0:  # 점프 완료
+                    self.x, self.y = self.target_pos
+                    self.is_jumping = False  # 휴식 모드
+                    self.jump_start_time = current_time  # 휴식 시작 시간 기록
 
-            if jump_progress >= 1.0:  # 점프 완료
-                # 새로운 점프 시작
-                self.jump_start_time = current_time
-                self.jump_direction = random.choice([1, 2, 3, 4])
-                jump_progress = 0
+                else:
+                    # 점프 중 - 곡선 이동
+                    t = jump_progress
+                    x1, y1 = self.start_pos
+                    x2, y2 = self.target_pos
 
-            # 기본 이동 (Octorok처럼)
-            distance = self.speed * game_framework.frame_time
-            if self.jump_direction == 1:  # up
-                self.y += distance
-            elif self.jump_direction == 2:  # down
-                self.y -= distance
-            elif self.jump_direction == 3:  # left
-                self.x -= distance
-            elif self.jump_direction == 4:  # right
-                self.x += distance
+                    # 선형 보간으로 기본 위치 계산
+                    self.x = (1 - t) * x1 + t * x2
+                    base_y = (1 - t) * y1 + t * y2
 
-            # 점프 효과 (Y좌표에 사인파 추가)
-            jump_offset = self.jump_height * math.sin(jump_progress * math.pi)
-            self.y += jump_offset
+                    # 아치 효과 추가
+                    arch_height = 60 * math.sin(t * math.pi)
+                    self.y = base_y + arch_height
 
-            # 화면 경계 처리
-            half_size = self.size // 2
-            if self.x - half_size < 0:
-                self.x = half_size
-                self.jump_direction = 4
-            elif self.x + half_size > 1280:
-                self.x = 1280 - half_size
-                self.jump_direction = 3
+            else:  # 점프 후 휴식
+                rest_progress = (current_time - self.jump_start_time) / self.rest_duration
 
-            if self.y - half_size < 0:
-                self.y = half_size
-                self.jump_direction = 1
-            elif self.y + half_size > 880:
-                self.y = 880 - half_size
-                self.jump_direction = 2
+                if rest_progress >= 1.0:  # 휴식 완료
+                    # 새로운 점프 준비
+                    self.is_jumping = True
+                    self.jump_start_time = current_time
+                    self.start_pos = (self.x, self.y)
 
-            # 프레임 애니메이션
-            if current_time - self.frame_time >= self.frame_interval:
+                    # 새로운 목표 위치 설정
+                    target_x = self.x + random.randint(-150, 150)
+                    target_y = self.y + random.randint(-150, 150)
+
+                    # 화면 경계 제한
+                    half_size = self.size // 2
+                    target_x = max(half_size, min(1280 - half_size, target_x))
+                    target_y = max(half_size, min(880 - half_size, target_y))
+
+                    self.target_pos = (target_x, target_y)
+
+            # 프레임 애니메이션 (점프 중일 때만)
+            if self.is_jumping and current_time - self.frame_time >= 0.2:
+                self.frame_index = (self.frame_index + 1) % len(self.LRframes)
+                self.frame_time = current_time
+            elif not self.is_jumping and current_time - self.frame_time >= 0.8:  # 휴식 중에는 느리게
                 self.frame_index = (self.frame_index + 1) % len(self.LRframes)
                 self.frame_time = current_time
 
@@ -307,10 +318,12 @@ class Monster:
 
     def handle_collision(self, group, other):
         if group == 'monster:obstacle':
-            self.x = self.prev_x
-            self.y = self.prev_y
-            self.direction = random.randint(1, 4)
-            self.move_time = get_time()  # 방향 변경 시간 리셋
+            if not self.name == 'Tektite':
+                self.x = self.prev_x
+                self.y = self.prev_y
+                self.direction = random.randint(1, 4)
+                self.move_time = get_time()  # 방향 변경 시간 리셋
+
 
         elif group == 'attack_range:monster':
             if not self.is_dead:  # 아직 죽지 않았을 때만 데미지 처리

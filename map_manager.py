@@ -586,7 +586,11 @@ class MapManager:
                 (1065, 488, 1280, 560)
             ],
             'monsters': [
-
+                (676,522,'Tektite'),
+                (676,357,'Tektite'),
+                (839,357,'Tektite'),
+                (839,522,'Tektite'),
+                (996,613,'Tektite')
             ],
             'Door': [],
             'NPCs': [],

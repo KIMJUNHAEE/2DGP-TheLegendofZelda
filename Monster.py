@@ -270,6 +270,10 @@ class Monster:
                     arch_height = 60 * math.sin(t * math.pi)
                     self.y = base_y + arch_height
 
+                    # 화면 경계 제한 (아치 효과 적용 후)
+                    half_size = self.size // 2
+                    self.y = max(half_size, min(880 - half_size, self.y))
+
             else:  # 점프 후 휴식
                 rest_progress = (current_time - self.jump_start_time) / self.rest_duration
 

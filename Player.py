@@ -161,7 +161,7 @@ class Attack:
         # 현재 시간 확인
         current_time = get_time()
         # 설정된 간격이 지났을 때만 프레임 변경
-        if current_time - self.player.frame_time >= self.player.frame_interval:
+        if current_time - self.player.frame_time >= self.player.Attack_frame_interval:
             self.player.frame = (self.player.frame + 1) % 4
             self.player.frame_time = current_time  # 시간 업데이트
             if self.player.frame == 0:  # 한 사이클이 끝났을 때
@@ -312,6 +312,7 @@ class player:
         # 애니메이션 타이밍 변수 추가
         self.frame_time = 0
         self.frame_interval = 0.2  # 0.2초마다 프레임 변경
+        self.Attack_frame_interval = 0.12  # 공격 애니메이션 프레임 변경 간격
 
         # 이미지 파일 경로 수정
         base_path = 'resource/LinkFrame/'

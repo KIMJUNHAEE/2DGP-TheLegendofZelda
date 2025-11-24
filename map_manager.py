@@ -498,7 +498,7 @@ class MapManager:
         self.map_data[121] = {
             'cam_x': 1800 + 257, 'cam_y': 182,
             'transitions': {
-                'left': 120, 'right': None, 'up': 105, 'down': None
+                'left': 120, 'right': 122, 'up': 105, 'down': None
             },
             'obstacles': [
                 (0,482,100,880),
@@ -537,6 +537,118 @@ class MapManager:
                 (1163, 508, 'Octorok'),
                 (1160, 362, 'Octorok'),
                 (1162, 210, 'Octorok')
+            ],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[122] = {
+            'cam_x': 1800 + 514, 'cam_y': 182,
+            'transitions': {
+                'left': 121, 'right': 123, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [
+
+            ],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[123] = {
+            'cam_x': 1800 + 771, 'cam_y': 182,
+            'transitions': {
+                'left': 122, 'right': 124, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [
+
+            ],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[124] = {
+            'cam_x': 1800 + 1028, 'cam_y': 182,
+            'transitions': {
+                'left': 123, 'right': 125, 'up': 108, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [
+
+            ],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[125] = {
+            'cam_x': 1800 + 1285, 'cam_y': 182,
+            'transitions': {
+                'left': 124, 'right': 126, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [
+
+            ],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[126] = {
+            'cam_x': 1800 + 1542, 'cam_y': 182,
+            'transitions': {
+                'left': 125, 'right': 127, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [
+
+            ],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[127] = {
+            'cam_x': 1800 + 1799, 'cam_y': 182,
+            'transitions': {
+                'left': 126, 'right': 128, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [
+
+            ],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[128] = {
+            'cam_x': 1800 + 2056, 'cam_y': 182,
+            'transitions': {
+                'left': 127, 'right': None, 'up': 112, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [
+
             ],
             'Door': [],
             'NPCs': [],

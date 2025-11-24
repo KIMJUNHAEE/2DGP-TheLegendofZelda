@@ -347,41 +347,27 @@ class MapManager:
     def load_obstacles(self, map_num, player):
         """현재 맵의 장애물을 game_world와 충돌 시스템에 등록"""
 
-        # 1. 이전 맵의 장애물들을 game_world와 collision_pairs에서 제거
-        for o in self.current_obstacles:
-            game_world.remove_object(o)
-            game_world.remove_collision_object(o)
-        self.current_obstacles.clear()
+        # 1. 충돌 페어 완전 정리 - 이게 핵심!
+        game_world.collision_pairs.clear()
 
-        # 2. 이전 맵의 몬스터들을 제거
-        for o in self.current_monsters:
-            game_world.remove_object(o)
-            game_world.remove_collision_object(o)
-        self.current_monsters.clear()
-
-        # 3. 이전 맵의 문들을 제거
-        for o in self.current_doors:
-            game_world.remove_object(o)
-            game_world.remove_collision_object(o)
-        self.current_doors.clear()
-
-        # 이전 맵의 NPC들을 제거
-        for o in self.current_npcs:
-            game_world.remove_object(o)
-            game_world.remove_collision_object(o)
-        self.current_npcs.clear()
-
-        # 이전 맵의 아이템들을 제거
-        for o in self.current_items:
-            game_world.remove_object(o)
-            game_world.remove_collision_object(o)
-        self.current_items.clear()
-
-        # 화살 제거 추가
-        for obj in game_world.world[1][:]:  # 슬라이싱으로 복사본 생성
-            if isinstance(obj, Arrow):
+        # 2. 기존 객체들 제거
+        for obj_list in [self.current_obstacles, self.current_monsters,
+                         self.current_doors, self.current_npcs, self.current_items]:
+            for obj in obj_list:
                 game_world.remove_object(obj)
-                game_world.remove_collision_object(obj)
+            obj_list.clear()
+
+        # 3. 화살들 완전 제거
+        for layer in game_world.world:
+            for obj in layer[:]:  # 복사본으로 순회
+                if isinstance(obj, Arrow):
+                    game_world.remove_object(obj)
+
+        # 4. 플레이어 기본 충돌 페어만 재등록
+        game_world.add_collision_pair('player:arrow', player, None)
+        game_world.add_collision_pair('player:obstacle', player, None)
+        game_world.add_collision_pair('player:monster', player, None)
+        game_world.add_collision_pair('player:door', player, None)
 
         # 4. 새 맵의 장애물 로드
         obstacle_rects = self.get_obstacles(map_num)

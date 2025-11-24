@@ -442,6 +442,90 @@ class MapManager:
             'items': []
         }
 
+        self.map_data[113] = {
+            'cam_x': 1, 'cam_y': 182,
+            'transitions': {
+                'left': None, 'right': 114, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[114] = {
+            'cam_x': 258, 'cam_y': 182,
+            'transitions': {
+                'left': 113, 'right': 115, 'up': 98, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[115] = {
+            'cam_x': 515, 'cam_y': 182,
+            'transitions': {
+                'left': 114, 'right': 116, 'up': 99, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[116] = {
+            'cam_x': 772, 'cam_y': 182,
+            'transitions': {
+                'left': 115, 'right': 117, 'up': 100, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[117] = {
+            'cam_x': 1029, 'cam_y': 182,
+            'transitions': {
+                'left': 116, 'right': 118, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[118] = {
+            'cam_x': 1286, 'cam_y': 182,
+            'transitions': {
+                'left': None, 'right': 119, 'up': 102, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
         self.map_data[119] = {
             'cam_x': 1800 - 257, 'cam_y': 182,
             'transitions': {

@@ -44,6 +44,90 @@ class MapManager:
         # 맵 1칸당 월드 좌표계 오프셋: (dx=257, dy=177)
         # 맵 스크린 좌표계 크기: (0, 0) ~ (1280, 880)
 
+        self.map_data[97] = {
+            'cam_x': 1, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': None, 'right': 98, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[98] = {
+            'cam_x': 1800 - 1542, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 97, 'right': 99, 'up': None, 'down': 114
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[99] = {
+            'cam_x': 1800 - 1285, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 98, 'right': 100, 'up': None, 'down': 115
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[100] = {
+            'cam_x': 1800 - 1028, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 99, 'right': 101, 'up': None, 'down': 116
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[101] = {
+            'cam_x': 1800 - 771, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 100, 'right': 102, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[102] = {
+            'cam_x': 1800 - 514, 'cam_y': 182 + 177,
+            'transitions': {
+                'left': 101, 'right': 103, 'up': None, 'down': 118
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
         self.map_data[103] = {
             'cam_x': 1800 - 257, 'cam_y': 182 + 177,
             'transitions': {

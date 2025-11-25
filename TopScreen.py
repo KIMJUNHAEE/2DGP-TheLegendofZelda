@@ -1,9 +1,6 @@
 # 상단 체력, 미니맵, 아이템들이 표시되는 화면
 from pico2d import *
 
-from play_mode import player_obj
-
-
 # 상단 화면 1280 x 140
 class TopScreen:
     image = None
@@ -30,7 +27,25 @@ class TopScreen:
     def draw(self):
         TopScreen.image.clip_draw(0, 0, 256, 56, self.x, self.y, 1280, 140)
 
-        if player_obj.
+        current_hp = self.player.hp
+        max_heart = (self.player.MaxHp + 1) // 2 # 올림으로 계산
+
+        for i in range(max_heart):
+            row = i // 8
+            col = i % 8
+
+            heart_x = 896 + (col * 40)
+            heart_y = 910 + (row * 20)
+
+
+            heart_hp = current_hp - (i * 2)
+
+            if heart_hp >= 2:
+                TopScreen.FullHeart.clip_draw(0, 0, 16, 16, heart_x, heart_y,40,20)
+            elif heart_hp == 1:
+                TopScreen.HalfHeart.clip_draw(0, 0, 16, 16, heart_x, heart_y,40,20)
+            else:
+                TopScreen.EmptyHeart.clip_draw(0, 0, 16, 16, heart_x, heart_y,40,20)
 
 
     def update(self):

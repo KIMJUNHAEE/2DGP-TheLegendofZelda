@@ -887,7 +887,10 @@ class MapManager:
                 (0, 0, 1280, 400)
             ],
             'monsters': [
-
+                (439,690,'Octorok'),
+                (835,530,'Octorok'),
+                (1020,594,'Octorok'),
+                (1124,445,'Octorok')
             ],
             'Door': [],
             'NPCs': [],

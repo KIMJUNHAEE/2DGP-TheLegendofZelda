@@ -43,6 +43,10 @@ def handle_events():
             elif not config.teleport_mode:
                 config.teleport_mode = True
                 print("텔레포트 모드 ON")
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
+            player_obj.hp += 1
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
+            player_obj.hp -= 1
         else:
             player_obj.handle_event(event)
 

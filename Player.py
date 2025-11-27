@@ -54,6 +54,74 @@ def attack(e):
 def get_item_event(e):
     return e[0] == 'GET_ITEM'
 
+def hurt_event(e):
+    return e[0] == 'HURT'
+
+class Hurt:
+    def __init__(self, player):
+        self.player = player
+        self.start_time = 0
+        self.duration = 0.5  # 1초간 밀려남
+        self.knockback_speed = 800  # 밀려나는 속도
+        self.hurt_direction = 0  # 밀려나는 방향
+
+    def enter(self, e):
+        self.start_time = get_time()
+        self.player.frame = 0
+        self.player.frame_time = get_time()
+        self.player.Hurt = True
+
+    def exit(self, e):
+        self.player.Hurt = False
+        config.cant_control = False
+
+
+    def do(self):
+        current_time = get_time()
+
+        # 애니메이션 프레임 업데이트
+        if current_time - self.player.frame_time >= 0.1:
+            self.player.frame = (self.player.frame + 1) % 4
+            self.player.frame_time = current_time
+
+        # 밀려나는 이동 처리
+        elapsed_time = current_time - self.start_time
+        if elapsed_time < self.duration:
+            # 시간이 지날수록 속도 감소 (감속 효과)
+            speed_factor = max(0, 1 - elapsed_time / self.duration)
+            move_speed = self.knockback_speed * speed_factor * game_framework.frame_time
+
+            if self.hurt_direction == 1:  # Up으로 밀려남
+                self.player.y += move_speed
+            elif self.hurt_direction == 2:  # Down으로 밀려남
+                self.player.y -= move_speed
+            elif self.hurt_direction == 3:  # Left로 밀려남
+                self.player.x -= move_speed
+            elif self.hurt_direction == 4:  # Right로 밀려남
+                self.player.x += move_speed
+        else:
+            # 1초가 지나면 Idle 상태로 복귀하고 모든 상태 초기화
+            self.player.state_machine.cur_state = self.player.IDLE
+            self.player.Hurt = False
+            self.player.God = False
+            config.cant_control = False
+
+    def draw(self):
+        # 피격 애니메이션 그리기 (깜빡임 효과 제거)
+        if self.player.face_dir == 1:  # Up
+            self.player.LinkUpHurtFrames1[self.player.frame].clip_draw(0, 0, 16, 16, self.player.x, self.player.y,
+                                                                       self.player.size, self.player.size)
+        elif self.player.face_dir == 2:  # Down
+            self.player.LinkDownHurtFrames1[self.player.frame].clip_draw(0, 0, 16, 16, self.player.x, self.player.y,
+                                                                         self.player.size, self.player.size)
+        elif self.player.face_dir == 3:  # Left
+            self.player.LinkLRHurtFrames1[self.player.frame].clip_composite_draw(0, 0, 16, 16, 0, 'h',
+                                                                                 self.player.x, self.player.y,
+                                                                                 self.player.size, self.player.size)
+        elif self.player.face_dir == 4:  # Right
+            self.player.LinkLRHurtFrames1[self.player.frame].clip_draw(0, 0, 16, 16, self.player.x, self.player.y,
+                                                                       self.player.size, self.player.size)
+
 class GetItem:
     def __init__(self, player):
         self.player = player
@@ -310,6 +378,12 @@ class player:
         self.swordY = 0
         self.damage = 1
 
+        self.God = False
+        self.GodTime = 4.0
+
+        self.HurtTime = 1.0
+        self.Hurt = False
+
         # 애니메이션 타이밍 변수 추가
         self.frame_time = 0
         self.frame_interval = 0.2  # 0.2초마다 프레임 변경
@@ -337,11 +411,19 @@ class player:
         self.LRSwordFRAME = [load_image(f'{base_path}LRSword{i + 1}.png') for i in range(attack_count - 1)]
         self.GetItemFRAME = [load_image(f'{base_path2}GetItem{i + 1}.png') for i in range(get_Item_count)]
 
+        self.LinkDownHurtFrames1 = [load_image(f'{base_path}LinkDownHurt{i + 1}.png') for i in range(4)]
+        self.LinkUpHurtFrames1 = [load_image(f'{base_path}LinkUpHurt{i + 1}.png') for i in range(4)]
+        self.LinkLRHurtFrames1 = [load_image(f'{base_path}LinkLRHurt{i + 1}.png') for i in range(4)]
+        self.LinkDownHurtFrames2 = [load_image(f'{base_path}LinkDownHurt{i + 5}.png') for i in range(4)]
+        self.LinkUpHurtFrames2 = [load_image(f'{base_path}LinkUpHurt{i + 5}.png') for i in range(4)]
+        self.LinkLRHurtFrames2 = [load_image(f'{base_path}LinkLRHurt{i + 5}.png') for i in range(4)]
+
         self.IDLE = Idle(self)
         self.UPDOWN = UpDown(self)
         self.RIGHTLEFT = RightLeft(self)
         self.ATTACK = Attack(self)
         self.GetItem = GetItem(self)
+        self.HURT = Hurt(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -352,34 +434,39 @@ class player:
                     right_down: self.RIGHTLEFT,
                     left_down: self.RIGHTLEFT,
                     attack: self.ATTACK,
-                    get_item_event: self.GetItem
+                    get_item_event: self.GetItem,
+                    hurt_event: self.HURT
                 },
                 self.UPDOWN: {
                     up_up: self.IDLE,
                     down_up: self.IDLE,
                     right_down: self.RIGHTLEFT,
                     left_down: self.RIGHTLEFT,
-                    # 같은 상태 내에서 방향 변경을 위해 추가
                     up_down: self.UPDOWN,
                     down_down: self.UPDOWN,
                     attack: self.ATTACK,
-                    get_item_event: self.GetItem
+                    get_item_event: self.GetItem,
+                    hurt_event: self.HURT
                 },
                 self.RIGHTLEFT: {
                     right_up: self.IDLE,
                     left_up: self.IDLE,
                     up_down: self.UPDOWN,
                     down_down: self.UPDOWN,
-                    # 같은 상태 내에서 방향 변경을 위해 추가
                     right_down: self.RIGHTLEFT,
                     left_down: self.RIGHTLEFT,
                     attack: self.ATTACK,
-                    get_item_event: self.GetItem
+                    get_item_event: self.GetItem,
+                    hurt_event: self.HURT
                 },
-                self.ATTACK : {
-                    get_item_event: self.GetItem
+                self.ATTACK: {
+                    get_item_event: self.GetItem,
+                    hurt_event: self.HURT
                 },
-                self.GetItem : {
+                self.GetItem: {
+                    hurt_event: self.HURT
+                },
+                self.HURT: {
                 }
             }
         )
@@ -390,6 +477,7 @@ class player:
     def update(self):
         self.prev_x, self.prev_y = self.x, self.y
         self.state_machine.update()
+
 
     def draw(self):
         self.state_machine.draw()
@@ -419,9 +507,45 @@ class player:
                     print(f"아이템 획득: {other.item_type}")
                 get_item_event = ('GET_ITEM', None)
                 self.state_machine.handle_state_event(get_item_event)
+
         elif group == 'player:monster':
-            self.hp -= other.damage
-            print(f"플레이어가 몬스터에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
+            if not self.God:
+                self.hp -= other.damage
+                self.God = True
+                config.cant_control = True
+
+                dx = self.x - other.x
+                dy = self.y - other.y
+
+                if abs(dx) > abs(dy):
+                    # 좌우 방향으로 밀려남
+                    self.HURT.hurt_direction = 4 if dx > 0 else 3
+                else:
+                    # 상하 방향으로 밀려남
+                    self.HURT.hurt_direction = 1 if dy > 0 else 2
+
+                hurt_event_tuple = ('HURT', None)
+                self.state_machine.handle_state_event(hurt_event_tuple)
+
+                print(f"플레이어가 몬스터에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
+
         elif group == 'player:arrow':
-            self.hp -= other.damage
-            print(f"플레이어가 화살에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
+            if not self.God:
+                self.hp -= other.damage
+                self.God = True
+                config.cant_control = True
+
+                dx = self.x - other.x
+                dy = self.y - other.y
+
+                if abs(dx) > abs(dy):
+                    # 좌우 방향으로 밀려남
+                    self.HURT.hurt_direction = 4 if dx > 0 else 3
+                else:
+                    # 상하 방향으로 밀려남
+                    self.HURT.hurt_direction = 1 if dy > 0 else 2
+
+                hurt_event_tuple = ('HURT', None)
+                self.state_machine.handle_state_event(hurt_event_tuple)
+
+                print(f"플레이어가 화살에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")

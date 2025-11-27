@@ -48,7 +48,8 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
             player_obj.hp -= 1
         else:
-            player_obj.handle_event(event)
+            if not config.cant_control:
+                player_obj.handle_event(event)
 
 def init():
     global player_obj, over_world_obj, map_manager_obj, current_map_num

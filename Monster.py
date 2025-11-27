@@ -81,12 +81,6 @@ class Arrow:
                 game_world.remove_collision_object(self)
                 return
 
-            self.range -= distance
-            if self.range <= 0:
-                game_world.remove_object(self)
-                game_world.remove_collision_object(self)
-                return
-
             if self.direction == 1:  # up
                 self.y += distance
             elif self.direction == 2:  # down
@@ -96,6 +90,12 @@ class Arrow:
             elif self.direction == 4:  # right
                 self.x += distance
 
+            # 사거리 감소 (이동 후에 처리)
+            self.range -= distance
+            if self.range <= 0:
+                game_world.remove_object(self)
+                game_world.remove_collision_object(self)
+                return
 
     def draw(self):
         if self.name == 'Octorok':

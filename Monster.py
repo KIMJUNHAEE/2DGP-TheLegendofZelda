@@ -78,7 +78,7 @@ class Arrow:
             if (self.x - half_size < 0 or self.x + half_size > 1280 or
                     self.y - half_size < 0 or self.y + half_size > 880):
                 game_world.remove_object(self)
-                game_world.remove_collision_object(self)
+                game_world.remove_collision_object(self)  # 주석 해제
                 return
 
             if self.direction == 1:  # up
@@ -94,7 +94,7 @@ class Arrow:
             self.range -= distance
             if self.range <= 0:
                 game_world.remove_object(self)
-                game_world.remove_collision_object(self)
+                game_world.remove_collision_object(self)  # 주석 해제
                 return
 
     def draw(self):
@@ -111,8 +111,10 @@ class Arrow:
 
     def handle_collision(self, group, other):
         if group in ['arrow:obstacle', 'player:arrow']:
-            game_world.remove_object(self)
-            game_world.remove_collision_object(self)
+            # 이미 제거 중인지 확인
+            if self in game_world.world[1]:  # 화살이 아직 존재하는지 확인
+                game_world.remove_object(self)
+                game_world.remove_collision_object(self)
 
 
 class Monster:
@@ -375,4 +377,3 @@ class Monster:
         game_world.add_object(arrow, 1)
         game_world.add_collision_pair('player:arrow', None, arrow)
         game_world.add_collision_pair('arrow:obstacle', arrow, None)
-        game_world.add_collision_pair('player:arrow', None, arrow)

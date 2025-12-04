@@ -21,6 +21,30 @@ class OldManNPC:
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25
 
+class ZeldaNPC:
+    def __init__(self, x, y):
+        base_path = 'resource/NPCs/'
+        self.image = [load_image(f'{base_path}zelda{i + 1}.png') for i in range(2)]
+        self.x = x
+        self.y = y
+        self.frame = 0
+
+    def update(self):
+        pass
+
+    def draw(self):
+        self.image[self.frame].clip_draw(0, 0, 16, 16, self.x, self.y,50,50)
+        if config.Show_BB:
+            draw_rectangle(*self.get_bb())
+
+    def get_bb(self):
+        return self.x - 25, self.y - 25, self.x + 25, self.y + 25
+
+    def handle_collision(self, group, other):
+        if group == 'player:zelda':
+            self.frame = 1
+
+
 class FireNPC:
     def __init__(self, x, y):
         base_path = 'resource/NPCs/'

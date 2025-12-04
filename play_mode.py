@@ -200,9 +200,7 @@ def handle_door_collision():
             # 새 맵의 장애물들을 로드
             map_manager_obj.load_obstacles(120, player_obj)
 
-
         elif current_map_num == 117:
-
             print(f"맵 전환: {current_map_num} -> 보스 스테이지 (문 진입)")
             current_map_num = 1
             map_manager_obj.current_map_num = 1
@@ -223,10 +221,64 @@ def handle_door_collision():
 
             # 4. 플레이어 위치를 보스 스테이지의 시작 위치로 설정
             player_obj.x = 640
-            player_obj.y = 100
+            player_obj.y = 300
 
             # 5. 보스 스테이지의 장애물 및 객체 로드
             map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+
+        elif current_map_num == 1:
+            print(f"맵 전환: {current_map_num} -> 2")
+            current_map_num = 2
+            map_manager_obj.current_map_num = 2
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        elif current_map_num == 2:
+            print(f"맵 전환: {current_map_num} -> 3")
+            current_map_num = 3
+            map_manager_obj.current_map_num = 3
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        elif current_map_num == 3:
+            print(f"맵 전환: {current_map_num} -> 4")
+            current_map_num = 4
+            map_manager_obj.current_map_num = 4
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        elif current_map_num == 4:
+            print(f"맵 전환: {current_map_num} -> 3")
+            current_map_num = 4
+            map_manager_obj.current_map_num = 4
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
 
         # 플래그 리셋
         player_obj.door_collision = False

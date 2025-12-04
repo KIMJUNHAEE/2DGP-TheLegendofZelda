@@ -47,6 +47,122 @@ class MapManager:
         self.map_data[1] = {
             'cam_x': 1543, 'cam_y': 1,
             'transitions': {
+                'left': None, 'right': None, 'up': 2, 'down': None
+            },
+            'obstacles': [
+                (121, 157, 162, 718),
+                (162, 718, 582, 763),
+                (691, 737, 1146, 757),
+                (1117, 165, 1154, 721),
+                (140, 140, 1116, 165)
+            ],
+            'monsters': [],
+            'Door': [(601, 763, 676, 799)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[2] = {
+            'cam_x': 1543, 'cam_y': 1 + 177,
+            'transitions': {
+                'left': 3, 'right': None, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [(84,403,117,480)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[3] = {
+            'cam_x': 1543 - 257, 'cam_y': 1 + 177,
+            'transitions': {
+                'left': 4, 'right': None, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [(84,403,117,480)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[4] = {
+            'cam_x': 1543 - 514, 'cam_y': 1 + 177,
+            'transitions': {
+                'left': None, 'right': None, 'up': 5, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [(601, 763, 676, 799)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[5] = {
+            'cam_x': 1543 - 514, 'cam_y': 1 + 354,
+            'transitions': {
+                'left': 6, 'right': None, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [(84,403,117,480)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[6] = {
+            'cam_x': 1543 - 771, 'cam_y': 1 + 354,
+            'transitions': {
+                'left': 7, 'right': None, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [(84,403,117,480)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[7] = {
+            'cam_x': 1543 - 1028, 'cam_y': 1 + 354,
+            'transitions': {
+                'left': None, 'right': None, 'up': 8, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [(601, 763, 676, 799)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[8] = {
+            'cam_x': 1543 - 1028, 'cam_y': 1 + 531,
+            'transitions': {
+                'left': None, 'right': None, 'up': 9, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [(601, 763, 676, 799)],
+            'NPCs': [],
+            'items': []
+        }
+
+        self.map_data[9] = {
+            'cam_x': 1543 - 1028, 'cam_y': 1 + 708,
+            'transitions': {
                 'left': None, 'right': None, 'up': None, 'down': None
             },
             'obstacles': [

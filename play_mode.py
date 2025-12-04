@@ -4,6 +4,7 @@ import game_framework
 import over_world
 from Player import player
 from over_world import OverWorld
+from BossStage import BossStage
 from map_manager import MapManager
 from TopScreen import TopScreen
 import config
@@ -13,7 +14,6 @@ player_obj = None
 over_world_obj = None
 map_manager_obj = None
 current_map_num = 120 # 시작 맵 번호
-
 
 def handle_events():
     event_list = get_events()
@@ -129,7 +129,6 @@ def check_map_transition():
 
         # 6. [수정] 새 맵의 장애물들을 로드 (이전 장애물은 자동 클리어됨)
         map_manager_obj.load_obstacles(current_map_num, player_obj)
-
 
 def update():
     game_world.update()  # player.update()가 여기서 호출됨 (이동)

@@ -549,3 +549,5 @@ class player:
                 self.state_machine.handle_state_event(hurt_event_tuple)
 
                 print(f"플레이어가 화살에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
+        elif group == 'player:zelda':
+            self.x, self.y = 700, 490

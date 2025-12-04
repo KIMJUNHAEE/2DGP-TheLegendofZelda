@@ -3,7 +3,7 @@ import game_world
 from pico2d import draw_rectangle
 import config
 from Monster import Monster, Arrow
-from NPC import OldManNPC, FireNPC
+from NPC import OldManNPC, FireNPC, ZeldaNPC
 from Item import Item
 
 # 장애물 클래스
@@ -256,7 +256,7 @@ class MapManager:
             ],
             'monsters': [],
             'Door': [],
-            'NPCs': [],
+            'NPCs': [(640,490, 'zelda')],
             'items': []
         }
 
@@ -1390,6 +1390,11 @@ class MapManager:
                 npc_obj = FireNPC(x, y)
                 self.current_npcs.append(npc_obj)
                 game_world.add_object(npc_obj, 1)
+            elif name == 'zelda':
+                npc_obj = ZeldaNPC(x, y)
+                self.current_npcs.append(npc_obj)
+                game_world.add_object(npc_obj, 1)
+                game_world.add_collision_pair('player:zelda', player, npc_obj)
 
         items_info = self.get_items(map_num)
         for x, y, item_type in items_info:

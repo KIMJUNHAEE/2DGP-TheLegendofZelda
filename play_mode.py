@@ -238,6 +238,9 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
+            player_obj.x = 640
+            player_obj.y = 300
+
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
         elif current_map_num == 2:
@@ -250,6 +253,9 @@ def handle_door_collision():
             if cam_x is not None:
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
+
+            player_obj.x = 640
+            player_obj.y = 300
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
@@ -264,12 +270,15 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
+            player_obj.x = 640
+            player_obj.y = 300
+
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
         elif current_map_num == 4:
-            print(f"맵 전환: {current_map_num} -> 3")
-            current_map_num = 4
-            map_manager_obj.current_map_num = 4
+            print(f"맵 전환: {current_map_num} -> 5")
+            current_map_num = 5
+            map_manager_obj.current_map_num = 5
 
             cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
 
@@ -277,7 +286,75 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
+            player_obj.x = 640
+            player_obj.y = 300
+
             map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        elif current_map_num == 5:
+            print(f"맵 전환: {current_map_num} -> 6")
+            current_map_num = 6
+            map_manager_obj.current_map_num = 6
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            player_obj.x = 640
+            player_obj.y = 300
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        elif current_map_num == 6:
+            print(f"맵 전환: {current_map_num} -> 7")
+            current_map_num = 7
+            map_manager_obj.current_map_num = 7
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            player_obj.x = 640
+            player_obj.y = 300
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        elif current_map_num == 7:
+            print(f"맵 전환: {current_map_num} -> 8")
+            current_map_num = 8
+            map_manager_obj.current_map_num = 8
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            player_obj.x = 640
+            player_obj.y = 300
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
+        elif current_map_num == 8:
+            print(f"맵 전환: {current_map_num} -> 9")
+            current_map_num = 9
+            map_manager_obj.current_map_num = 9
+
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            player_obj.x = 640
+            player_obj.y = 300
+
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
 
 
         # 플래그 리셋

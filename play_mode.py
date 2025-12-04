@@ -15,6 +15,11 @@ over_world_obj = None
 map_manager_obj = None
 current_map_num = 120 # 시작 맵 번호
 
+
+# BossStage
+boss_stage = None
+is_boss_stage = False
+
 def handle_events():
     event_list = get_events()
     for event in event_list:
@@ -52,7 +57,7 @@ def handle_events():
                 player_obj.handle_event(event)
 
 def init():
-    global player_obj, over_world_obj, map_manager_obj, current_map_num
+    global player_obj, over_world_obj, map_manager_obj, current_map_num, boss_stage_obj
 
     # MapManager 초기화
     map_manager_obj = MapManager()
@@ -65,6 +70,8 @@ def init():
 
     over_world_obj = OverWorld(player_obj)  # player 객체 전달
     game_world.add_object(over_world_obj,0)
+
+    boss_stage_obj = BossStage(player_obj)
 
     # MapManager에서 시작 카메라 위치 가져오기
     cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
@@ -81,7 +88,7 @@ def init():
     game_world.add_object(top_screen, 0)
 
 def check_map_transition():
-    global current_map_num, player_obj, over_world_obj, map_manager_obj
+    global current_map_num, player_obj, over_world_obj, map_manager_obj, boss_stage_obj
 
     new_map_num = None
     direction = None
@@ -148,13 +155,12 @@ def draw():
     game_world.render()
     update_canvas()
 
-
 def finish():
     game_world.clear()
     game_world.collision_pairs.clear()
 
 def handle_door_collision():
-    global current_map_num, player_obj, over_world_obj, map_manager_obj
+    global current_map_num, player_obj, over_world_obj, map_manager_obj, is_boss_stage, boss_stage_obj
 
     if hasattr(player_obj, 'door_collision') and player_obj.door_collision:
         # 현재 맵이 120이고 문과 충돌했을 때 맵 200으로 전환
@@ -194,8 +200,37 @@ def handle_door_collision():
             # 새 맵의 장애물들을 로드
             map_manager_obj.load_obstacles(120, player_obj)
 
+
+        elif current_map_num == 117:
+
+            print(f"맵 전환: {current_map_num} -> 보스 스테이지 (문 진입)")
+            current_map_num = 1
+            map_manager_obj.current_map_num = 1
+            is_boss_stage = True
+
+            # 1. 기존 over_world_obj를 게임 월드에서 제거
+            game_world.remove_object(over_world_obj)
+
+            # 2. boss_stage_obj를 게임 월드에 추가
+            game_world.add_object(boss_stage_obj, 0)
+
+            # 3. 보스 스테이지의 카메라 위치를 가져와서 업데이트
+            cam_x, cam_y = map_manager_obj.get_camera_pos(current_map_num)
+
+            if cam_x is not None:
+                boss_stage_obj.x = cam_x
+                boss_stage_obj.y = cam_y
+
+            # 4. 플레이어 위치를 보스 스테이지의 시작 위치로 설정
+            player_obj.x = 640
+            player_obj.y = 100
+
+            # 5. 보스 스테이지의 장애물 및 객체 로드
+            map_manager_obj.load_obstacles(current_map_num, player_obj)
+
         # 플래그 리셋
         player_obj.door_collision = False
+
 
 def pause(): pass
 

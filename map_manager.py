@@ -44,6 +44,20 @@ class MapManager:
         # 맵 1칸당 월드 좌표계 오프셋: (dx=257, dy=177)
         # 맵 스크린 좌표계 크기: (0, 0) ~ (1280, 880)
 
+        self.map_data[1] = {
+            'cam_x': 1543, 'cam_y': 1,
+            'transitions': {
+                'left': None, 'right': None, 'up': None, 'down': None
+            },
+            'obstacles': [
+
+            ],
+            'monsters': [],
+            'Door': [],
+            'NPCs': [],
+            'items': []
+        }
+
         self.map_data[97] = {
             'cam_x': 1, 'cam_y': 182 + 177,
             'transitions': {

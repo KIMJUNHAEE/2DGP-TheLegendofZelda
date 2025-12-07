@@ -341,6 +341,7 @@ def handle_door_collision():
 
             ganon = Ganon()
             game_world.add_object(ganon, 1)
+            game_world.add_collision_pair('attack_range:monster', None, ganon)
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 

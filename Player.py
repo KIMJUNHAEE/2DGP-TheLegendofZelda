@@ -216,7 +216,7 @@ class Attack:
         attack_range = AttackRange(self.player.x, self.player.y, self.attack_dir, self.player.damage)
         game_world.add_object(attack_range, 1)
         for obj in game_world.world[1]:  # 몬스터들이 1번 레이어에 있음
-            if hasattr(obj, 'name'):  # 몬스터 객체인지 확인
+            if hasattr(obj, 'name') or obj.__class__.__name__ == 'Ganon':
                 game_world.add_collision_pair('attack_range:monster', attack_range, obj)
 
         self.player.frame = 0  # 프레임 초기화

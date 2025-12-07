@@ -9,6 +9,8 @@ from map_manager import MapManager
 from TopScreen import TopScreen
 import config
 
+from BossMoster import Ganon, GaonoArrow
+
 # 전역 변수 선언
 player_obj = None
 over_world_obj = None
@@ -336,6 +338,9 @@ def handle_door_collision():
 
             player_obj.x = 640
             player_obj.y = 300
+
+            ganon = Ganon()
+            game_world.add_object(ganon, 1)
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 

@@ -6,6 +6,9 @@ from state_machine import StateMachine
 import config
 import game_world
 
+
+
+
 # player의 Run Speed 계산
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
@@ -226,6 +229,8 @@ class Attack:
         pass
 
     def do(self):
+        self.player.attack_sound.play()
+
         # 현재 시간 확인
         current_time = get_time()
         # 설정된 간격이 지났을 때만 프레임 변경
@@ -361,6 +366,10 @@ class Idle:
 
 
 class player:
+    # music
+    get_item_sound = None
+    attack_sound = None
+
     def __init__(self):
         # 플레이어 좌표
         self.x, self.y = 640, 440
@@ -398,6 +407,10 @@ class player:
         lr_count = 2
         attack_count = 4
         get_Item_count = 2
+
+        player.get_item_sound = load_wav('sound/BG/SmallItemGet.mp3')
+        player.attack_sound = load_wav('sound/LOZ_Complete_201609/LOZ_Sword_Slash.wav')
+        player.attack_sound.set_volume(32)
 
         self.UPFRAME = [load_image(f'{base_path}Link{i + 5}.png') for i in range(up_count)]
         self.DOWNFRAME = [load_image(f'{base_path}Link{i + 1}.png') for i in range(down_count)]
@@ -494,6 +507,7 @@ class player:
         )
 
     def handle_collision(self,group, other):
+        global get_item_sound
         if group == 'player:obstacle':
             self.x = self.prev_x
             self.y = self.prev_y
@@ -506,6 +520,7 @@ class player:
                 else:
                     print(f"아이템 획득: {other.item_type}")
                 get_item_event = ('GET_ITEM', None)
+                player.get_item_sound.play()
                 self.state_machine.handle_state_event(get_item_event)
 
         elif group == 'player:monster':

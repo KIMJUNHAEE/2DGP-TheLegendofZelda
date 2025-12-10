@@ -9,10 +9,12 @@ import math
 class MonsterDead:
     def __init__(self, x, y, Monster):
         self.x, self.y = x, y
+        self.monster = Monster
         self.name = Monster.name
         self.frame_index = 0
         self.frame_time = get_time()
         self.frame_interval = 0.2  # 각 프레임 간격 (초)
+        self.SC = 1
 
         base_path = 'resource/Enemies/'
         if self.name == 'Octorok':
@@ -27,6 +29,9 @@ class MonsterDead:
             self.frames = [load_image(f'{base_path}MDead{i + 1}.png') for i in range(4)]
 
     def update(self):
+        if self.SC == 1:
+            self.monster.Die_sound.play()
+            self.SC += 1
         current_time = get_time()
         if current_time - self.frame_time >= self.frame_interval:
             self.frame_index += 1
@@ -122,6 +127,9 @@ class Monster:
     UDframes = None
     TektiteFrames = None
 
+    Die_sound = None
+
+
     def __init__(self, x, y, name, map_num=None, monster_index=None):
         self.name = name
         self.x, self.y = x, y
@@ -146,6 +154,8 @@ class Monster:
         self.speed = 0  # 이동 속도
         self.move_time = get_time()
         self.direction_change_interval = 1.0  # 2초마다 방향 변경
+
+        self.Die_sound = load_wav('sound/LOZ_Complete_201609/LOZ_Enemy_Die.wav')
 
         base_path = 'resource/Enemies/'
         # 몬스터 등장 이펙트

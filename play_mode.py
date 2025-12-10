@@ -15,8 +15,8 @@ from BossMoster import Ganon, GaonoArrow
 player_obj = None
 over_world_obj = None
 map_manager_obj = None
+over_world_music = None
 current_map_num = 120 # 시작 맵 번호
-
 
 # BossStage
 boss_stage = None
@@ -59,7 +59,10 @@ def handle_events():
                 player_obj.handle_event(event)
 
 def init():
-    global player_obj, over_world_obj, map_manager_obj, current_map_num, boss_stage_obj
+    global player_obj, over_world_obj, map_manager_obj, current_map_num, boss_stage_obj, over_world_music
+
+    over_world_music = load_music('sound/BG/OverworldofHyrule.mp3')
+    over_world_music.repeat_play()
 
     # MapManager 초기화
     map_manager_obj = MapManager()

@@ -8,7 +8,7 @@ import title_mode as start_mode
 # 상단 화면 1280 x 140
 game_weight = 1280
 game_height = 1020
-
+00
 open_canvas(game_weight, game_height)
 game_framework.run(start_mode)
 close_canvas()

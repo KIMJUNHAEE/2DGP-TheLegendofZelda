@@ -378,6 +378,8 @@ class Monster:
                 self.hp -= other.damage
                 if self.hp <= 0:
                     self.is_dead = True  # 죽음 상태로 변경
+                    config.score += 1  # 몬스터 처치 시 점수 1점 증가
+                    print(f"{self.name} 몬스터가 처치되었습니다! 현재 점수: {config.score}")
                     monsterdead = MonsterDead(self.x, self.y, self)
                     game_world.add_object(monsterdead, 1)
 

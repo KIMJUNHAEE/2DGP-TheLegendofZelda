@@ -576,7 +576,9 @@ class player:
                 print(f"플레이어가 화살에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
         elif group == 'player:zelda':
             self.x, self.y = 700, 490
+            game_framework.quit()
             print("게임 클리어! 축하합니다!")
+            print("최종 점수:", config.score)
         elif group == 'player:ganon_arrow':
             if not self.God:
                 self.hurt_sound.play()

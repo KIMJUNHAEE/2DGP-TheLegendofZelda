@@ -7,3 +7,4 @@ cant_control = False
 Attack_Monster_Collision = False
 
 
+score = 0  # 플레이어 점수

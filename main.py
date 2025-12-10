@@ -1,7 +1,7 @@
 from pico2d import open_canvas, delay, close_canvas
 import game_framework
 
-import play_mode as start_mode
+import title_mode as start_mode
 
 # 게임 화면 크기 설정
 # 플레이 화면 1280 x 880

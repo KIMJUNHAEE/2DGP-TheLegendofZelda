@@ -106,7 +106,6 @@ class Hurt:
             # 1초가 지나면 Idle 상태로 복귀하고 모든 상태 초기화
             self.player.state_machine.cur_state = self.player.IDLE
             self.player.Hurt = False
-            self.player.God = False
             config.cant_control = False
 
     def draw(self):
@@ -374,7 +373,7 @@ class player:
     def __init__(self):
         # 플레이어 좌표
         self.x, self.y = 640, 440
-        self.hp = 60000
+        self.hp = 10
         self.MaxHp = 32 # Max = 32
         self.prev_x, self.prev_y = self.x, self.y
         self.width, self.height = 16, 16
@@ -389,7 +388,8 @@ class player:
         self.damage = 1
 
         self.God = False
-        self.GodTime = 4.0
+        self.god_start_time = 0  # 무적 시작 시간 추가
+        self.GodTime = 3.0  # 무적 지속 시간 (1초)
 
         self.HurtTime = 1.0
         self.Hurt = False
@@ -493,6 +493,12 @@ class player:
         self.prev_x, self.prev_y = self.x, self.y
         self.state_machine.update()
 
+        # 무적 시간 체크
+        if self.God:
+            current_time = get_time()
+            if current_time - self.god_start_time >= self.GodTime:
+                self.God = False
+
 
     def draw(self):
         self.state_machine.draw()
@@ -530,6 +536,7 @@ class player:
                 self.hurt_sound.play()
                 self.hp -= other.damage
                 self.God = True
+                self.god_start_time = get_time()
                 config.cant_control = True
 
                 dx = self.x - other.x

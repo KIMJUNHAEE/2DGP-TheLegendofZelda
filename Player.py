@@ -373,7 +373,7 @@ class player:
     def __init__(self):
         # 플레이어 좌표
         self.x, self.y = 640, 440
-        self.hp = 10
+        self.hp = 32
         self.MaxHp = 32 # Max = 32
         self.prev_x, self.prev_y = self.x, self.y
         self.width, self.height = 16, 16
@@ -576,3 +576,32 @@ class player:
                 print(f"플레이어가 화살에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
         elif group == 'player:zelda':
             self.x, self.y = 700, 490
+            print("게임 클리어! 축하합니다!")
+        elif group == 'player:ganon_arrow':
+            if not self.God:
+                self.hurt_sound.play()
+                self.hp -= other.damage
+                self.God = True
+                self.god_start_time = get_time()
+                config.cant_control = True
+
+                # 밀려나는 방향 계산
+                dx = self.x - other.x
+                dy = self.y - other.y
+
+                if abs(dx) > abs(dy):
+                    # 좌우 방향으로 밀려남
+                    self.HURT.hurt_direction = 4 if dx > 0 else 3
+                else:
+                    # 상하 방향으로 밀려남
+                    self.HURT.hurt_direction = 1 if dy > 0 else 2
+
+                hurt_event_tuple = ('HURT', None)
+                self.state_machine.handle_state_event(hurt_event_tuple)
+
+                print(f"플레이어가 가논 화살에게 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
+
+
+
+
+

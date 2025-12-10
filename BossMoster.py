@@ -17,12 +17,16 @@ class GaonoArrow:
     def __init__(self, start_x, start_y, target_x, target_y):
         self.x = start_x
         self.y = start_y
+        self.start_x = start_x
+        self.start_y = start_y
         self.tx = target_x
         self.ty = target_y
         self.frame_count = 0
         self.frame_time = 0
         self.frame_interval = 0.1  # 0.1초마다 프레임 변경
         self.size = 40
+        self.damage = 2
+        self.max_distance = 500
 
         # 방향 계산
         dx = target_x - start_x
@@ -52,6 +56,12 @@ class GaonoArrow:
         # 화면 밖으로 나가면 제거
         if self.x < 0 or self.x > 1280 or self.y < 0 or self.y > 880:
             game_world.remove_object(self)
+            game_world.remove_collision_object(self)
+
+        # traveled_distance = math.sqrt((self.x - self.start_x) ** 2 + (self.y - self.start_y) ** 2)
+        #
+        # if traveled_distance >= self.max_distance or self.x < 0 or self.x > 1280 or self.y < 0 or self.y > 880:
+        #     game_world.remove_object(self)
 
     def draw(self):
         if GaonoArrow.image:
@@ -67,8 +77,10 @@ class GaonoArrow:
     def handle_collision(self, group, other):
         if group == 'player:ganon_arrow':
             game_world.remove_object(self)
+            game_world.remove_collision_object(self)
         elif group == 'obstacle:ganon_arrow':
             game_world.remove_object(self)
+            game_world.remove_collision_object(self)
 
 
 animation_names = ['Idle', 'Hit', 'Stun', 'Attack', 'Dead']
@@ -79,6 +91,8 @@ class Ganon:
     HitImage = None
     StunImage = None
     AttackImage = None
+    HitSound = None
+    DieSound = None
 
     def load_images(self):
         base_path = 'resource/Enemies/'
@@ -97,6 +111,7 @@ class Ganon:
         self.load_images()
         self.frame_size = 32
         self.state = 'Idle'
+        self.damage = 2
 
         # 투명화 관련 변수
         self.alpha = False
@@ -104,6 +119,11 @@ class Ganon:
 
         # 행동 카운트 (1초마다 1번씩, 총 5번 행동하기 위함)
         self.move_count = 0
+
+
+        self.HitSound = load_wav('sound/LOZ_Complete_201609/LOZ_Boss_Hit.wav')
+        self.DieSound = load_wav('sound/LOZ_Complete_201609/LOZ_Boss_Scream3.wav')
+
 
         self.hp = 10
         self.StunHp = 3
@@ -153,6 +173,7 @@ class Ganon:
             # 무적상태가 아닐 때만 피해를 받음
             if not self.is_invulnerable:
                 self.hp -= other.damage
+                self.HitSound.play()
 
                 # 무적상태 시작
                 self.is_invulnerable = True
@@ -162,6 +183,7 @@ class Ganon:
 
                 if self.hp <= 0:
                     print("가논이 처치되었습니다!")
+                    self.DieSound.play()
                     game_world.remove_object(self)
             else:
                 print("가논이 무적상태입니다!")

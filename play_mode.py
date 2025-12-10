@@ -21,6 +21,7 @@ current_map_num = 120 # 시작 맵 번호
 # BossStage
 boss_stage = None
 is_boss_stage = False
+boss_stage_music = None
 
 def handle_events():
     event_list = get_events()
@@ -59,10 +60,12 @@ def handle_events():
                 player_obj.handle_event(event)
 
 def init():
-    global player_obj, over_world_obj, map_manager_obj, current_map_num, boss_stage_obj, over_world_music
+    global player_obj, over_world_obj, map_manager_obj, current_map_num, boss_stage_obj, over_world_music, boss_stage_music
 
     over_world_music = load_music('sound/BG/OverworldofHyrule.mp3')
     over_world_music.repeat_play()
+
+    boss_stage_music = load_music('sound/BG/DeathMountainDungeon.mp3')
 
     # MapManager 초기화
     map_manager_obj = MapManager()
@@ -207,6 +210,9 @@ def handle_door_collision():
 
         elif current_map_num == 117:
             print(f"맵 전환: {current_map_num} -> 보스 스테이지 (문 진입)")
+            over_world_music.stop()
+            boss_stage_music.repeat_play()
+
             current_map_num = 1
             map_manager_obj.current_map_num = 1
             is_boss_stage = True
@@ -226,7 +232,7 @@ def handle_door_collision():
 
             # 4. 플레이어 위치를 보스 스테이지의 시작 위치로 설정
             player_obj.x = 640
-            player_obj.y = 300
+            player_obj.y = 221
 
             # 5. 보스 스테이지의 장애물 및 객체 로드
             map_manager_obj.load_obstacles(current_map_num, player_obj)
@@ -243,8 +249,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 636
+            player_obj.y = 192
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
@@ -259,8 +265,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 1142
+            player_obj.y = 440
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
@@ -275,8 +281,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 1089
+            player_obj.y = 447
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
@@ -291,8 +297,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 637
+            player_obj.y = 173
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
@@ -307,8 +313,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 1094
+            player_obj.y = 447
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
@@ -323,8 +329,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 187
+            player_obj.y = 447
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 
@@ -339,8 +345,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 635
+            player_obj.y = 152
 
             ganon = Ganon()
             game_world.add_object(ganon, 1)
@@ -359,8 +365,8 @@ def handle_door_collision():
                 boss_stage_obj.x = cam_x
                 boss_stage_obj.y = cam_y
 
-            player_obj.x = 640
-            player_obj.y = 300
+            player_obj.x = 635
+            player_obj.y = 152
 
             map_manager_obj.load_obstacles(current_map_num, player_obj)
 

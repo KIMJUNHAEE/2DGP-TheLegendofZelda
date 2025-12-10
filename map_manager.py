@@ -533,7 +533,7 @@ class MapManager:
                 (956, 804, 1039, 879),
                 (1120, 805, 1202, 873)
             ],
-            'monsters': [],
+            'monsters': [(225, 619, 'Octorok'), (956, 613,'Octorok'), (235, 251,'Tektite'), (966, 238,'Tektite')],
             'Door': [],
             'NPCs': [],
             'items': []

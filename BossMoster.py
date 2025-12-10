@@ -108,6 +108,10 @@ class Ganon:
         self.hp = 10
         self.StunHp = 3
 
+        self.is_invulnerable = False
+        self.invulnerable_start_time = 0
+        self.invulnerable_duration = 1.0  # 1초간 무적
+
         self.build_behavior_tree()
 
     def get_bb(self):
@@ -117,8 +121,15 @@ class Ganon:
         self.alpha_mode()
         self.bt.run()
 
+        if self.is_invulnerable:
+            current_time = get_time()
+            if current_time - self.invulnerable_start_time >= self.invulnerable_duration:
+                self.is_invulnerable = False
+                print("가논의 무적 상태가 해제되었습니다.")  # 디버깅용
+
         if self.hp <= 0:
             self.state = 'Dead'
+
 
     def draw(self):
         if not self.alpha:  # 투명화 상태가 아닐 때만 그리기
@@ -138,10 +149,22 @@ class Ganon:
         pass
 
     def handle_collision(self, group, other):
-        if group == 'player:Ganon':
-            self.hp -= 1
-            self.state = 'Hit'
-            # 피격 시 투명화 해제 여부는 기획에 따라 결정
+        if group == 'attack_range:monster':
+            # 무적상태가 아닐 때만 피해를 받음
+            if not self.is_invulnerable:
+                self.hp -= other.damage
+
+                # 무적상태 시작
+                self.is_invulnerable = True
+                self.invulnerable_start_time = get_time()
+
+                print(f"가논이 {other.damage}의 피해를 입었습니다. 남은 체력: {self.hp}")
+
+                if self.hp <= 0:
+                    print("가논이 처치되었습니다!")
+                    game_world.remove_object(self)
+            else:
+                print("가논이 무적상태입니다!")
 
     def alpha_mode(self):
         self.alpha_timer += game_framework.frame_time

@@ -369,6 +369,7 @@ class player:
     # music
     get_item_sound = None
     attack_sound = None
+    hurt_sound = None
 
     def __init__(self):
         # 플레이어 좌표
@@ -411,6 +412,7 @@ class player:
         player.get_item_sound = load_wav('sound/BG/SmallItemGet.mp3')
         player.attack_sound = load_wav('sound/LOZ_Complete_201609/LOZ_Sword_Slash.wav')
         player.attack_sound.set_volume(32)
+        player.hurt_sound = load_wav('sound/LOZ_Complete_201609/LOZ_Link_Hurt.wav')
 
         self.UPFRAME = [load_image(f'{base_path}Link{i + 5}.png') for i in range(up_count)]
         self.DOWNFRAME = [load_image(f'{base_path}Link{i + 1}.png') for i in range(down_count)]
@@ -525,6 +527,7 @@ class player:
 
         elif group == 'player:monster':
             if not self.God:
+                self.hurt_sound.play()
                 self.hp -= other.damage
                 self.God = True
                 config.cant_control = True

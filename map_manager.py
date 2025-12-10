@@ -87,7 +87,12 @@ class MapManager:
                 (141, 142, 586, 161),
                 (680, 142, 1120, 162)
             ],
-            'monsters': [],
+            'monsters': [(270, 438, 'Octorok'),
+                         (279, 324, 'Octorok'),
+                         (285, 219, 'Octorok'),
+                         (570, 438, 'Octorok'),
+                         (584, 332, 'Octorok'),
+                         (584, 218, 'Octorok')],
             'Door': [(84,403,117,480)],
             'NPCs': [],
             'items': []
@@ -107,7 +112,12 @@ class MapManager:
                 (1118, 168, 1160, 402),
                 (142, 143, 1117, 164)
             ],
-            'monsters': [],
+            'monsters': [(270, 438, 'Octorok'),
+                        (279, 324, 'Octorok'),
+                        (285, 219, 'Octorok'),
+                        (570, 438, 'Octorok'),
+                        (584, 332, 'Octorok'),
+                        (584, 218, 'Octorok')],
             'Door': [(84,403,117,480)],
             'NPCs': [],
             'items': []
@@ -131,7 +141,10 @@ class MapManager:
                 (1118, 168, 1174, 401),
                 (144, 142, 1119, 165)
             ],
-            'monsters': [],
+            'monsters': [(288, 676, 'Octorok'),
+                        (276, 378, 'Octorok'),
+                        (800, 238, 'Octorok'),
+                        (962, 689, 'Octorok')],
             'Door': [(601, 763, 676, 799)],
             'NPCs': [],
             'items': []
@@ -162,7 +175,9 @@ class MapManager:
                 (679, 121, 1123, 162),
                 (131, 122, 599, 160)
             ],
-            'monsters': [],
+            'monsters': [(1006, 674, 'Octorok'),
+                        (351, 678, 'Octorok'),
+                        (985, 222, 'Octorok')],
             'Door': [(84,403,117,480)],
             'NPCs': [],
             'items': []
@@ -205,7 +220,14 @@ class MapManager:
                 (139, 160, 160, 716),
                 (160, 147, 802, 163)
             ],
-            'monsters': [],
+            'monsters': [(296, 627, 'Tektite'),
+                        (285, 511, 'Tektite'),
+                        (290, 330, 'Tektite'),
+                        (611, 644, 'Tektite'),
+                        (640, 420, 'Tektite'),
+                        (637, 260, 'Tektite'),
+                        (957, 623, 'Tektite'),
+                        (968, 261, 'Tektite')],
             'Door': [(601, 763, 676, 799)],
             'NPCs': [],
             'items': []
@@ -274,7 +296,7 @@ class MapManager:
                 (1202, 562, 1280, 639),
                 (151,801,1125,880)
             ],
-            'monsters': [],
+            'monsters': [(293,665, 'Octorok'),(521,666, 'Octorok'),(739,666, 'Octorok'),(941,666, 'Octorok'),(336,333,'Tektite'),(591,333,'Tektite'),(825,333, 'Tektite'),(975,333, 'Tektite')],
             'Door': [],
             'NPCs': [],
             'items': []
@@ -353,7 +375,7 @@ class MapManager:
                 (873, 800, 964, 880),
                 (1037, 800, 1122, 879)
             ],
-            'monsters': [],
+            'monsters': [(448,635,'Octorok'),(683,261,'Octorok'),(999,651,'Octorok')],
             'Door': [],
             'NPCs': [],
             'items': []
@@ -388,7 +410,7 @@ class MapManager:
                 (719, 808, 881, 881),
                 (1040, 808, 1119, 881)
             ],
-            'monsters': [],
+            'monsters': [(376,629,'Octorok'),(357,452,'Octorok'),(350,268,'Octorok'),(743,598,'Octorok'),(827,253,'Tektite')],
             'Door': [],
             'NPCs': [],
             'items': []
@@ -418,7 +440,7 @@ class MapManager:
                 (881, 803, 960, 879),
                 (1040, 803, 1119, 881)
             ],
-            'monsters': [],
+            'monsters': [(207,585,'Tektite'),(163,257,'Tektite'),(933,659,'Octorok'),(959,204,'Octorok')],
             'Door': [],
             'NPCs': [],
             'items': []
@@ -444,7 +466,7 @@ class MapManager:
                 (1202, 569, 1280, 644),
                 (559, 804, 639, 880)
             ],
-            'monsters': [],
+            'monsters': [(186, 650, 'Octorok'),(957, 638, 'Tektite'),(549, 203, 'Tektite')],
             'Door': [],
             'NPCs': [],
             'items': []
@@ -482,7 +504,7 @@ class MapManager:
                 (1121, 643, 1199, 722),
                 (1199, 565, 1280, 720)
             ],
-            'monsters': [],
+            'monsters': [(148, 487, 'Octorok'),(835, 482, 'Octorok')],
             'Door': [],
             'NPCs': [],
             'items': []
@@ -746,7 +768,7 @@ class MapManager:
                 (293, 160, 312, 188),
                 (313, 142, 1279, 155)
             ],
-            'monsters': [],
+            'monsters': [(472,538,'Octorok'),(454,257,'Octorok'),(763,454,'Octorok')],
             'Door': [],
             'NPCs': [],
             'items': []
@@ -770,7 +792,7 @@ class MapManager:
                 (1119, 241, 1189, 321),
                 (1196, 293, 1278, 315)
             ],
-            'monsters': [],
+            'monsters': [(871,448,'Octorok'),(299,434,'Tektite')],
             'Door': [],
             'NPCs': [],
             'items': []
